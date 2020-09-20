@@ -11,6 +11,14 @@ using namespace std;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 
+// 버텍스 배열 생성
+// OpenGL은 정규화 된 좌표를 처리한다
+float vertices[] = {
+	-0.5f, -0.5f, 0.0f,
+	 0.5f, -0.5f, 0.0f,
+	 0.0f,  0.5f, 0.0f
+};
+
 int main()
 {
 	// GLFW Window를 인스턴스화한다
