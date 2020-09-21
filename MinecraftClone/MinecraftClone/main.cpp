@@ -11,12 +11,19 @@ using namespace std;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 
-// 버텍스 배열 생성
+// 버텍스, 인덱스 생성
 // OpenGL은 정규화 된 좌표를 처리한다
 float vertices[] = {
-	-0.5f, -0.5f, 0.0f,		// left
-	 0.5f, -0.5f, 0.0f,		// right
-	 0.0f,  0.5f, 0.0f		// top
+	 0.5f,  0.5f, 0.0f,  // top right
+	 0.5f, -0.5f, 0.0f,  // bottom right
+	-0.5f, -0.5f, 0.0f,  // bottom left
+	-0.5f,  0.5f, 0.0f   // top left 
+};
+
+// note that we start from 0!
+unsigned int indices[] = {
+	0, 1, 3,   // first triangle
+	1, 2, 3    // second triangle
 };
 
 // 버텍스 쉐이더 소스
@@ -176,19 +183,26 @@ int main()
 	// vertex buffer objects - VBO
 	// 많은 수의 버텍스를 GPU 메모리에 한번에 올릴 수 있다
 	// 매번 보낼 필요없이 메모리에 유지하고 있다
-
 	// CPU -> GPU 메모리 쏘는 건 상대적으로 느리기 때문에 가능한 한번만 한다
 	// = 루프 말고 한번만 보내라
-	// 다른 OpenGL 객체 처럼 VBO는 유니크한 ID를 가진다
-	// vertex array object - VAO
-	// 인덱스 배열 객체 생성
-	unsigned int VBO, VAO;
+	// 다른 OpenGL 객체 처럼 유니크한 ID를 가진다
 
-	// VAO 한 개 생성한다
+	// VBO에 접근하는 배열
+	// vertex array object - VAO
+
+	// 인덱스 배열
+	// element buffer objects - EBO
+
+	unsigned int VBO, VAO, EBO;
+
+	// VAO 한개를 생성한다
 	glGenVertexArrays(1, &VAO);
 
 	// VBO 한개를 생성한다
 	glGenBuffers(1, &VBO);
+
+	// EBO 한개를 생성한다
+	glGenBuffers(1, &EBO);
 
 	// 1. 먼저 정점 배열 객체를 바인딩 한 다음
 	// 2. 정점 버퍼를 바인딩하고 설정 한 다음
@@ -196,7 +210,7 @@ int main()
 	// 이 순서로 해야하나봄
 
 	// glBindVertexArray - 로 바인딩 해서 VAO를 사용한다
-	// 알아서 다 연결해줌
+	// 그러면 VBO에 알아서 다 연결해 정점 배열 사용해서 동작한다
 	glBindVertexArray(VAO);
 
 	// OpenGL은 버퍼 객체들이 다양한 타입을 가지며
@@ -210,6 +224,16 @@ int main()
 	glBufferData(GL_ARRAY_BUFFER,			// 우리가 데이터를 복사할 버퍼 타입
 				sizeof(vertices),			// 복사 데이터 크기
 				vertices,					// 복사할 데이터
+				GL_STATIC_DRAW);			// 그래픽 카드가 데이터를 어떻게 다룰 것인가 정의
+											// GL_STATIC_DRAW - 한번 정의, 여러 번 사용
+
+	// EBO를 GL_ELEMENT_ARRAY_BUFFER로 등록
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+
+	// GL_ELEMENT_ARRAY_BUFFER에 인덱스 배열을 등록한다
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER,	// 우리가 데이터를 복사할 버퍼 타입
+				sizeof(indices),			// 복사 데이터 크기
+				indices,					// 복사할 데이터
 				GL_STATIC_DRAW);			// 그래픽 카드가 데이터를 어떻게 다룰 것인가 정의
 											// GL_STATIC_DRAW - 한번 정의, 여러 번 사용
 
@@ -228,17 +252,42 @@ int main()
 
 
 	// note that this is allowed,
-	// the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object
-	// so afterwards we can safely unbind
+	// glVertexAttribPointer 호출은 VBO를
+	// the vertex attribute's bound vertex buffer object 로 등록한다
+	// 이후 안전하게 바인딩을 해제할 수 있다
+	// -> 이미 등록되었기 때문에 해제 가능하다...?
+	// 찾아보니 안정성을 위해 null 버퍼 바인딩 하는 듯?
+
+	// We’re done uploading, so unbind the buffer for safety.
+	// 안전을 위해 이미 업로드 된 버퍼를 언바인딩한다
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+	// remember:
+	// do NOT unbind the EBO while a VAO is active
+	// as the bound element buffer object is stored in the VAO;
+	// keep the EBO bound.
+	// 바인딩 된 EBO가 VAO에 저장되므로
+	// VAO가 활성화되어있는 동안 EBO를 해제하지 마십시오.
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
 	// You can unbind the VAO afterwards
-	// so other VAO calls won't accidentally modify this VAO,
-	// but this rarely happens.
+	// VAO 또한 바인딩 해제할 수 있다
+	// so other VAO calls won't accidentally modify this VAO, but this rarely happens.
+	// 그래서 다른 VAO 호출들은 실수로 이 VAO를 수정하지 않지만, 가끔 일어날 수 있다
 	// Modifying other VAOs requires a call to glBindVertexArray anyways
+	// 다른 VAO를 수정하는 것도 glBindVertexArray가 호출되야한다
 	// so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
+	// 그래서 일반적으로는 VAO (또는 VBO)가 직접적으로 필요하지 않은 경우
+	// 바인딩을 해제하지 않습니다.
+
+	// 위 번역을 정리하면 VAO가 바인딩 되어있으면
+	// 물론 다른 VAO가 이 VAO를 건들지는 않겠지만 혹시나 하는 실수로
+	// 우리가 그리고자 하는 VBO와 연동된 VAO가 망가질 수 있다
+	// 실수를 피하기 위해 바인딩을 해제한다
 	glBindVertexArray(0);
 
+	// wireframe polygons 로 그릴꺼면 주석 해제
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	// Render loop
 	// 윈도우 종료 때까지 계속 반복하면서 렌더링한다
@@ -259,12 +308,16 @@ int main()
 
 		// VAO가 하나뿐이므로 매번 바인딩 할 필요는 없지만
 		// 좀 더 체계적으로 유지하기 위해 매번 바인딩한다
+		// 위에서 0으로 바인딩 해제한 것과 같은 맥락
 		glBindVertexArray(VAO);
 
 		// 오브젝트를 그린다
-		glDrawArrays(GL_TRIANGLES,	// 삼각형 그린다
-			0,						// 정점의 시작점
-			3);						// 정점의 수
+		// 인덱스 사용이므로 glDrawArrays -> glDrawElements 변경
+		// glDrawElements가 사용하는 인덱스는 EBO로 등록한 인덱스 배열이다
+		glDrawElements(GL_TRIANGLES,	// 삼각형 그린다
+			6,							// 정점의 수
+			GL_UNSIGNED_INT,			// 인덱스 배열의 타입
+			0);							// 인덱스 배열 시작점
 
 		// 더블 버퍼로 렌더링 버퍼, 준비 버퍼 둘이 바꾼다
 		glfwSwapBuffers(window);
@@ -273,6 +326,13 @@ int main()
 		// 체크 후 윈도우 상태를 업데이트하고 그 상태에 맞는 함수를 호출한다
 		glfwPollEvents();
 	}
+
+	// 사용한 GL 객체들 해제
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
+	glDeleteProgram(shaderProgram);
+
 
 	// GLFW 자원을 해제한다
 	glfwTerminate();
@@ -296,10 +356,4 @@ void processInput(GLFWwindow* window)
 	// esc 키 누르면 윈도우 종료 셋팅
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
-}
-
-// 쉐이더 생성, 셋팅 및 링크
-void SetShader()
-{
-	
 }
