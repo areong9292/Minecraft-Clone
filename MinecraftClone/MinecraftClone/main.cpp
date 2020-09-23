@@ -268,7 +268,7 @@ int main()
 	// keep the EBO bound.
 	// 바인딩 된 EBO가 VAO에 저장되므로
 	// VAO가 활성화되어있는 동안 EBO를 해제하지 마십시오.
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	// You can unbind the VAO afterwards
 	// VAO 또한 바인딩 해제할 수 있다
