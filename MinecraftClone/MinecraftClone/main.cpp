@@ -6,6 +6,8 @@
 
 #include <iostream>
 
+#include "ShaderManager.h"
+
 using namespace std;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -14,35 +16,16 @@ void processInput(GLFWwindow* window);
 // 버텍스, 인덱스 생성
 // OpenGL은 정규화 된 좌표를 처리한다
 float vertices[] = {
-	 0.5f,  0.5f, 0.0f,  // top right
-	 0.5f, -0.5f, 0.0f,  // bottom right
-	-0.5f, -0.5f, 0.0f,  // bottom left
-	-0.5f,  0.5f, 0.0f   // top left 
+	// position					// colors
+	 0.0f,  0.5f, 0.0f,			0.0f, 0.0f, 1.0f,	// top
+	 0.5f, -0.5f, 0.0f,			0.0f, 1.0f, 0.0f,	// bottom right
+	-0.5f, -0.5f, 0.0f,			1.0f, 0.0f, 0.0f,	// bottom left
 };
 
 // note that we start from 0!
 unsigned int indices[] = {
-	0, 1, 3,   // first triangle
-	1, 2, 3    // second triangle
+	0, 1, 2,   // first triangle
 };
-
-// 버텍스 쉐이더 소스
-const char *vertexShaderSource =
-"#version 330 core\n"										// 버전 3.3
-"layout (location = 0) in vec3 aPos;\n"						// 입력으로 3차원 벡터 aPos 받는다
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"		// 받은 입력으로 포지션 지정
-"}\0";														// gl_Position - 버텍스 쉐이더의 출력
-
-// 프레그먼트 쉐이더 소스
-const char *fragmentShaderSource =
-"#version 330 core\n"										// 버전 3.3
-"out vec4 FragColor;\n"										// 출력으로 4차원 벡터 컬러 값
-"void main()\n"
-"{\n"
-"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"			// 컬러 값 지정
-"}\0";
 
 // 작업 후 성공 여부 체크용 변수
 int  success;
@@ -95,89 +78,7 @@ int main()
 	// 콜백을 걸어두어 윈도우의 사이즈가 변경되었을 때 자동으로 뷰포트 지정하게 한다
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-
-	/// 쉐이더 셋팅
-	/// 버텍스 쉐이더
-	// 모던 OpenGL에서는 무언가를 렌더링 하려면
-	// 최소 버텍스, 프레그먼트 쉐이더를 정의해야한다
-	// 쉐이더를 사용하려면 GLSL로 쉐이더를 작성하고 컴파일 해야한다
-
-	// 유니크한 ID를 가지는 쉐이더 객체 생성하고 해당 아이디로 제어한다
-	// GL_VERTEX_SHADER - 버텍스 쉐이더 타입
-	unsigned int vertexShader;
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-
-	// 쉐이더 소스를 등록하고 컴파일한다
-	glShaderSource(vertexShader,			// 쉐이더 객체
-		1,						// 몇 개의 쉐이더 소스 컴파일 할거냐
-		&vertexShaderSource,	// 쉐이더 소스
-		NULL);
-
-	glCompileShader(vertexShader);
-
-
-	// 컴파일 후 컴파일 성공, 실패 여부 체크로직
-	// GL_COMPILE_STATUS - 컴파일 상태 가져온다
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-
-	if (!success)
-	{
-		// glGetShaderInfoLog - 쉐이더의 로그를 가져온다
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << endl;
-	}
-
-	/// 프레그먼트 쉐이더
-	// 유니크한 ID를 가지는 쉐이더 객체 생성하고 해당 아이디로 제어한다
-	// GL_FRAGMENT_SHADER - 프래그먼트 쉐이더 타입
-	unsigned int fragmentShader;
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-	// 쉐이더 소스를 등록하고 컴파일한다
-	glShaderSource(fragmentShader,			// 쉐이더 객체
-		1,						// 몇 개의 쉐이더 소스 컴파일 할거냐
-		&fragmentShaderSource,	// 쉐이더 소스
-		NULL);
-
-	glCompileShader(fragmentShader);
-
-	// 컴파일 후 컴파일 성공, 실패 여부 체크로직
-	// GL_COMPILE_STATUS - 컴파일 상태 가져온다
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-
-	if (!success)
-	{
-		// glGetShaderInfoLog - 쉐이더의 로그를 가져온다
-		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-		cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << endl;
-	}
-
-	// Shader Program 객체로 컴파일한 쉐이더들을 연결시킨다
-	unsigned int shaderProgram;
-	shaderProgram = glCreateProgram();
-
-	// 쉐이더 Attach
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-
-	// 쉐이더 링크
-	glLinkProgram(shaderProgram);
-
-	// 에러체크
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-
-	if (!success)
-	{
-		// glGetProgramInfoLog - Program의 로그를 가져온다
-		glGetProgramInfoLog(fragmentShader, 512, NULL, infoLog);
-		cout << "ERROR::SHADER::PROGTAM::LINK_FAILED\n" << infoLog << endl;
-	}
-
-	// 모든 쉐이더, 렌더링 콜은 glUseProgram로 호출되며
-	// 더 이상 쓰지 않는다
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-
+	ShaderManager ourShader("./Shader/shader.vs", "./Shader/shader.fs");
 
 	/// 그래픽 카드에 데이터 저장
 	// vertex buffer objects - VBO
@@ -240,15 +141,27 @@ int main()
 	/// 버텍스 속성 지정
 	// 각 정점의 속성은 VBO가 관리하는 메모리에서 데이터를 가져온다
 	// 현재 VBO는 GL_ARRAY_BUFFER에 바인딩되어 있으므로 정점 배열의 데이터를 가져오게 된다
+	// position attribute
 	glVertexAttribPointer(
-						0,						// 구성하려는 정점 속성, 위치를 지정하는데 쉐이더의 location = 0 이므로 0
-						3,						// 버텍스 속성의 크기 - vec3 이므로 3
-						GL_FLOAT,				// 버텍스 데이터 유형 - vec3 이므로 float
-						GL_FALSE,				// 데이터 정규화 여부 - 이미 정규화로 넣었으므로 false
-						3 * sizeof(float),		// 정점 별 메모리 보폭 계산
-						(void*)0);				// 데이터 버퍼가 시작하는 위치
+						0,								// 구성하려는 정점 속성, 위치를 지정하는데 쉐이더의 location = 0 이므로 0
+						3,								// 버텍스 속성의 크기 - vec3 이므로 3
+						GL_FLOAT,						// 버텍스 데이터 유형 - vec3 이므로 float
+						GL_FALSE,						// 데이터 정규화 여부 - 이미 정규화로 넣었으므로 false
+						6 * sizeof(float),				// 정점 별 메모리 보폭 계산
+						(void*)0);						// 데이터 버퍼가 시작하는 위치
 
 	glEnableVertexAttribArray(0);
+
+	// color attribute
+	glVertexAttribPointer(
+						1,								// 구성하려는 정점 속성, 컬러를 지정하는데 쉐이더의 location = 1 이므로 1
+						3,								// 버텍스 속성의 크기 - vec3 이므로 3
+						GL_FLOAT,						// 버텍스 데이터 유형 - vec3 이므로 float
+						GL_FALSE,						// 데이터 정규화 여부 - 이미 정규화로 넣었으므로 false
+						6 * sizeof(float),				// 정점 별 메모리 보폭 계산
+						(void*)(3 * sizeof(float)));	// 데이터 버퍼가 시작하는 위치 - 포지션 3개 뒤에 컬러이므로 3 * float로 포지션 위치 건너뛴다
+
+	glEnableVertexAttribArray(1);
 
 
 	// note that this is allowed,
@@ -287,7 +200,13 @@ int main()
 	glBindVertexArray(0);
 
 	// wireframe polygons 로 그릴꺼면 주석 해제
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	//float timeValue;
+	//float greenValue;
+
+	// 쉐이더에서 outColor 유니폼을 가져온다
+	//int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
 
 	// Render loop
 	// 윈도우 종료 때까지 계속 반복하면서 렌더링한다
@@ -303,9 +222,19 @@ int main()
 		// GL_COLOR_BUFFER_BIT - 컬러 버퍼 클리어
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		ourShader.use();
+		ourShader.setFloat("ourColor", 1.0f);
+		/*
 		// 오브젝트 렌더링할 때 우리의 쉐이더 프로그램을 사용하겠다
 		glUseProgram(shaderProgram);
 
+		// 계속 시간 값을 가져와 색상을 변경한다
+		timeValue = glfwGetTime();
+		greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+
+		// 가져온 유니폼에 값을 셋팅한다
+		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+		*/
 		// VAO가 하나뿐이므로 매번 바인딩 할 필요는 없지만
 		// 좀 더 체계적으로 유지하기 위해 매번 바인딩한다
 		// 위에서 0으로 바인딩 해제한 것과 같은 맥락
@@ -331,8 +260,8 @@ int main()
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
-	glDeleteProgram(shaderProgram);
 
+	ourShader.Destroy();
 
 	// GLFW 자원을 해제한다
 	glfwTerminate();
