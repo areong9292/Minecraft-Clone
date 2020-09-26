@@ -78,7 +78,7 @@ int main()
 	// 콜백을 걸어두어 윈도우의 사이즈가 변경되었을 때 자동으로 뷰포트 지정하게 한다
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	ShaderManager ourShader("./Shader/shader.vs", "./Shader/shader.fs");
+	ShaderManager ourShader("../Shader/shader.vs", "../Shader/shader.fs");
 
 	/// 그래픽 카드에 데이터 저장
 	// vertex buffer objects - VBO
