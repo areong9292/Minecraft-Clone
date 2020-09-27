@@ -154,8 +154,8 @@
     <ClInclude Include="ShaderManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shader\shader.fs" />
-    <None Include="Shader\shader.vs" />
+    <None Include="..\Shader\shader.fs" />
+    <None Include="..\Shader\shader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -8,6 +8,12 @@
 
 #include "ShaderManager.h"
 
+// Image Loader Library
+// 관련 정의 소스 코드 만 포함하도록 헤더 파일을 수정하여
+// 효과적으로 헤더 파일을 .cpp 파일로 변환합니다.
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 using namespace std;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -16,15 +22,24 @@ void processInput(GLFWwindow* window);
 // 버텍스, 인덱스 생성
 // OpenGL은 정규화 된 좌표를 처리한다
 float vertices[] = {
-	// position					// colors
-	 0.0f,  0.5f, 0.0f,			0.0f, 0.0f, 1.0f,	// top
-	 0.5f, -0.5f, 0.0f,			0.0f, 1.0f, 0.0f,	// bottom right
-	-0.5f, -0.5f, 0.0f,			1.0f, 0.0f, 0.0f,	// bottom left
+	// positions          // colors           // texture coords
+	 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
+	 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+	-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+	-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
 };
 
 // note that we start from 0!
-unsigned int indices[] = {
-	0, 1, 2,   // first triangle
+unsigned int indices[] = {  // note that we start from 0!
+	0, 1, 3,  // first Triangle
+	1, 2, 3   // second Triangle
+};
+
+float texCoords[] = {
+
+	0.5f, 1.0f,   // top-center corner 
+	1.0f, 0.0f,  // lower-right corner
+	0.0f, 0.0f,  // lower-left corner 
 };
 
 // 작업 후 성공 여부 체크용 변수
@@ -54,8 +69,8 @@ int main()
 
 	// 윈도우 생성
 	GLFWwindow* window = glfwCreateWindow(800, 600,			// width, height
-										"LearnOpenGL",		// 윈도우 이름 
-										NULL, NULL);
+		"LearnOpenGL",		// 윈도우 이름 
+		NULL, NULL);
 	if (window == NULL)
 	{
 		cout << "Failed to create GLFW window" << endl;
@@ -123,45 +138,56 @@ int main()
 	// glBufferData 메소드로 이전에 정의한 버텍스 정보를
 	// 버퍼 메모리에 복사할 수 있다
 	glBufferData(GL_ARRAY_BUFFER,			// 우리가 데이터를 복사할 버퍼 타입
-				sizeof(vertices),			// 복사 데이터 크기
-				vertices,					// 복사할 데이터
-				GL_STATIC_DRAW);			// 그래픽 카드가 데이터를 어떻게 다룰 것인가 정의
-											// GL_STATIC_DRAW - 한번 정의, 여러 번 사용
+		sizeof(vertices),			// 복사 데이터 크기
+		vertices,					// 복사할 데이터
+		GL_STATIC_DRAW);			// 그래픽 카드가 데이터를 어떻게 다룰 것인가 정의
+									// GL_STATIC_DRAW - 한번 정의, 여러 번 사용
 
 	// EBO를 GL_ELEMENT_ARRAY_BUFFER로 등록
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
 	// GL_ELEMENT_ARRAY_BUFFER에 인덱스 배열을 등록한다
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER,	// 우리가 데이터를 복사할 버퍼 타입
-				sizeof(indices),			// 복사 데이터 크기
-				indices,					// 복사할 데이터
-				GL_STATIC_DRAW);			// 그래픽 카드가 데이터를 어떻게 다룰 것인가 정의
-											// GL_STATIC_DRAW - 한번 정의, 여러 번 사용
+		sizeof(indices),			// 복사 데이터 크기
+		indices,					// 복사할 데이터
+		GL_STATIC_DRAW);			// 그래픽 카드가 데이터를 어떻게 다룰 것인가 정의
+									// GL_STATIC_DRAW - 한번 정의, 여러 번 사용
 
 	/// 버텍스 속성 지정
 	// 각 정점의 속성은 VBO가 관리하는 메모리에서 데이터를 가져온다
 	// 현재 VBO는 GL_ARRAY_BUFFER에 바인딩되어 있으므로 정점 배열의 데이터를 가져오게 된다
 	// position attribute
 	glVertexAttribPointer(
-						0,								// 구성하려는 정점 속성, 위치를 지정하는데 쉐이더의 location = 0 이므로 0
-						3,								// 버텍스 속성의 크기 - vec3 이므로 3
-						GL_FLOAT,						// 버텍스 데이터 유형 - vec3 이므로 float
-						GL_FALSE,						// 데이터 정규화 여부 - 이미 정규화로 넣었으므로 false
-						6 * sizeof(float),				// 정점 별 메모리 보폭 계산
-						(void*)0);						// 데이터 버퍼가 시작하는 위치
+		0,								// 구성하려는 정점 속성, 위치를 지정하는데 쉐이더의 location = 0 이므로 0
+		3,								// 버텍스 속성의 크기 - vec3 이므로 3
+		GL_FLOAT,						// 버텍스 데이터 유형 - vec3 이므로 float
+		GL_FALSE,						// 데이터 정규화 여부 - 이미 정규화로 넣었으므로 false
+		8 * sizeof(float),				// 정점 별 메모리 보폭 계산
+		(void*)0);						// 데이터 버퍼가 시작하는 위치
 
 	glEnableVertexAttribArray(0);
 
 	// color attribute
 	glVertexAttribPointer(
-						1,								// 구성하려는 정점 속성, 컬러를 지정하는데 쉐이더의 location = 1 이므로 1
-						3,								// 버텍스 속성의 크기 - vec3 이므로 3
-						GL_FLOAT,						// 버텍스 데이터 유형 - vec3 이므로 float
-						GL_FALSE,						// 데이터 정규화 여부 - 이미 정규화로 넣었으므로 false
-						6 * sizeof(float),				// 정점 별 메모리 보폭 계산
-						(void*)(3 * sizeof(float)));	// 데이터 버퍼가 시작하는 위치 - 포지션 3개 뒤에 컬러이므로 3 * float로 포지션 위치 건너뛴다
+		1,								// 구성하려는 정점 속성, 컬러를 지정하는데 쉐이더의 location = 1 이므로 1
+		3,								// 버텍스 속성의 크기 - vec3 이므로 3
+		GL_FLOAT,						// 버텍스 데이터 유형 - vec3 이므로 float
+		GL_FALSE,						// 데이터 정규화 여부 - 이미 정규화로 넣었으므로 false
+		8 * sizeof(float),				// 정점 별 메모리 보폭 계산
+		(void*)(3 * sizeof(float)));	// 데이터 버퍼가 시작하는 위치 - 포지션 3개 뒤에 컬러이므로 3 * float로 포지션 위치 건너뛴다
 
 	glEnableVertexAttribArray(1);
+
+	// texture attribute
+	glVertexAttribPointer(
+		2,								// 구성하려는 정점 속성, 컬러를 지정하는데 쉐이더의 location = 2 이므로 2
+		2,								// 버텍스 속성의 크기 - vec2 이므로 2
+		GL_FLOAT,						// 버텍스 데이터 유형 - vec3 이므로 float
+		GL_FALSE,						// 데이터 정규화 여부 - 이미 정규화로 넣었으므로 false
+		8 * sizeof(float),				// 정점 별 메모리 보폭 계산
+		(void*)(6 * sizeof(float)));	// 데이터 버퍼가 시작하는 위치 - 포지션 6개 뒤에 텍스쳐이므로 6 * float로 포지션 위치 건너뛴다
+
+	glEnableVertexAttribArray(2);
 
 
 	// note that this is allowed,
@@ -202,11 +228,64 @@ int main()
 	// wireframe polygons 로 그릴꺼면 주석 해제
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	//float timeValue;
-	//float greenValue;
+	/// 텍스쳐 로드 및 셋팅
+	// 텍스쳐 객체 생성
+	unsigned int texture;
+	glGenTextures(1, &texture);
 
-	// 쉐이더에서 outColor 유니폼을 가져온다
-	//int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+	// 생성한 객체를 GL_TEXTURE_2D에 바인드한다
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	// S - 오른쪽, T - 위쪽 방향
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+
+	// 만일 텍스쳐 셋팅이 GL_TEXTURE_BORDER_COLOR 인 경우
+	// 바깥 색상도 지정해야한다
+	// float borderColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
+	// glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+	// GL_NEAREST - 가장 가까운 색으로 셋팅
+	// GL_LINEAR - 근처 비슷한 색상으로 셋팅
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	// 텍스쳐 데이터 로드
+	int width, height, nrChannels;
+	unsigned char* data = stbi_load(
+		"../Texture/wall.jpg",				// 텍스쳐 파일 경로
+		&width,								// 텍스쳐 width
+		&height,							// 텍스쳐 height
+		&nrChannels,						// 텍스쳐의 컬러 채널의 수
+		0);
+
+	if (data)
+	{
+		// 이전에 로드한 텍스쳐 정보로 텍스쳐를 생성시킨다
+		glTexImage2D(GL_TEXTURE_2D,				// 텍스쳐 타겟 - 위에서 바인드한 텍스쳐 객체
+						0,						// mipmap level - 0은 기본 셋팅
+						GL_RGB,					// 텍스쳐를 어떤 포맷으로 저장할 것인가
+						width,					// 텍스쳐 width
+						height,					// 텍스쳐 height
+						0,						// 이건 항상 0
+						GL_RGB,					// 이미지의 포맷
+						GL_UNSIGNED_BYTE,		// 데이터 유형
+						data);					// 실제 이미지 데이터
+
+
+
+		// glTexImage2D 호출 후에는
+		// 바인딩 된 텍스쳐 오브젝트는 텍스쳐를 가지고 있다
+		// 기본 텍스쳐만 가지고 있으며 밉맵 셋팅을 위해 glGenerateMipmap을 호출한다
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		cout << "Failed to load texture" << endl;
+	}
+
+	// 로드한 다음 데이터 해제
+	stbi_image_free(data);
 
 	// Render loop
 	// 윈도우 종료 때까지 계속 반복하면서 렌더링한다
@@ -221,6 +300,9 @@ int main()
 
 		// GL_COLOR_BUFFER_BIT - 컬러 버퍼 클리어
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		// 텍스쳐 바인딩
+		glBindTexture(GL_TEXTURE_2D, texture);
 
 		ourShader.use();
 		ourShader.setFloat("ourColor", 1.0f);
