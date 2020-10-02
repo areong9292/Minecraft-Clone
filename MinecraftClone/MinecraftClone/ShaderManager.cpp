@@ -64,18 +64,7 @@ ShaderManager::ShaderManager(const char * vertexPath, const char * fragmentPath)
 		NULL);
 
 	glCompileShader(vertexShader);
-
-
-	// 컴파일 후 컴파일 성공, 실패 여부 체크로직
-	// GL_COMPILE_STATUS - 컴파일 상태 가져온다
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-
-	if (!success)
-	{
-		// glGetShaderInfoLog - 쉐이더의 로그를 가져온다
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << endl;
-	}
+	checkCompileErrors(vertexShader, "VERTEX");
 
 	/// 프레그먼트 쉐이더
 	// 유니크한 ID를 가지는 쉐이더 객체 생성하고 해당 아이디로 제어한다
@@ -90,17 +79,7 @@ ShaderManager::ShaderManager(const char * vertexPath, const char * fragmentPath)
 		NULL);
 
 	glCompileShader(fragmentShader);
-
-	// 컴파일 후 컴파일 성공, 실패 여부 체크로직
-	// GL_COMPILE_STATUS - 컴파일 상태 가져온다
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-
-	if (!success)
-	{
-		// glGetShaderInfoLog - 쉐이더의 로그를 가져온다
-		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-		cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << endl;
-	}
+	checkCompileErrors(fragmentShader, "FRAGMENT");
 
 	// Shader Program 객체로 컴파일한 쉐이더들을 연결시킨다
 	ID = glCreateProgram();
@@ -111,16 +90,7 @@ ShaderManager::ShaderManager(const char * vertexPath, const char * fragmentPath)
 
 	// 쉐이더 링크
 	glLinkProgram(ID);
-
-	// 에러체크
-	glGetProgramiv(ID, GL_LINK_STATUS, &success);
-
-	if (!success)
-	{
-		// glGetProgramInfoLog - Program의 로그를 가져온다
-		glGetProgramInfoLog(fragmentShader, 512, NULL, infoLog);
-		cout << "ERROR::SHADER::PROGTAM::LINK_FAILED\n" << infoLog << endl;
-	}
+	checkCompileErrors(ID, "PROGRAM");
 
 	// 모든 쉐이더, 렌더링 콜은 glUseProgram로 호출되며
 	// 더 이상 쓰지 않는다
@@ -135,6 +105,7 @@ void ShaderManager::Destroy()
 
 void ShaderManager::use()
 {
+	// 오브젝트 렌더링할 때 우리의 쉐이더 프로그램을 사용하겠다
 	glUseProgram(ID);
 }
 
@@ -150,5 +121,80 @@ void ShaderManager::setInt(const string & name, int value) const
 
 void ShaderManager::setFloat(const string & name, float value) const
 {
-	glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+}
+
+void ShaderManager::setVec2(const string & name, const vec2 & value) const
+{
+	glUniform2fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+}
+
+void ShaderManager::setVec2(const string & name, float x, float y) const
+{
+	glUniform2f(glGetUniformLocation(ID, name.c_str()), x, y);
+}
+
+void ShaderManager::setVec3(const string & name, const vec3 & value) const
+{
+	glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+}
+
+void ShaderManager::setVec3(const string & name, float x, float y, float z) const
+{
+	glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z);
+}
+
+void ShaderManager::setVec4(const string & name, const vec4 & value) const
+{
+	glUniform4fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+}
+
+void ShaderManager::setVec4(const string & name, float x, float y, float z, float w) const
+{
+	glUniform4f(glGetUniformLocation(ID, name.c_str()), x, y, z, w);
+}
+
+void ShaderManager::setMat2(const string & name, const mat2 mat) const
+{
+	glUniformMatrix2fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+}
+
+void ShaderManager::setMat3(const string & name, const mat3 mat) const
+{
+	glUniformMatrix3fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+}
+
+void ShaderManager::setMat4(const string & name, const mat4 mat) const
+{
+	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+}
+
+void ShaderManager::checkCompileErrors(GLuint shader, string type)
+{
+	GLint success;
+	GLchar infoLog[1024];
+
+	if (type != "PROGRAM")
+	{
+		// 컴파일 후 컴파일 성공, 실패 여부 체크로직
+		// GL_COMPILE_STATUS - 컴파일 상태 가져온다
+		glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+		if (!success)
+		{
+			// glGetShaderInfoLog - 쉐이더의 로그를 가져온다
+			glGetShaderInfoLog(shader, 1024, NULL, infoLog);
+			std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+		}
+	}
+	else
+	{
+		// 에러체크
+		glGetProgramiv(shader, GL_LINK_STATUS, &success);
+		if (!success)
+		{
+			// glGetProgramInfoLog - Program의 로그를 가져온다
+			glGetProgramInfoLog(shader, 1024, NULL, infoLog);
+			std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+		}
+	}
 }

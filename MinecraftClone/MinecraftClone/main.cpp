@@ -8,6 +8,8 @@
 
 #include "ShaderManager.h"
 
+#include "GLMHeader.h"
+
 // Image Loader Library
 // 관련 정의 소스 코드 만 포함하도록 헤더 파일을 수정하여
 // 효과적으로 헤더 파일을 .cpp 파일로 변환합니다.
@@ -23,10 +25,10 @@ void processInput(GLFWwindow* window);
 // OpenGL은 정규화 된 좌표를 처리한다
 float vertices[] = {
 	// positions          // colors           // texture coords
-	 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
-	 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+	 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   2.0f, 2.0f,   // top right
+	 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   2.0f, 0.0f,   // bottom right
 	-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-	-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
+	-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 2.0f    // top left 
 };
 
 // note that we start from 0!
@@ -46,10 +48,36 @@ float texCoords[] = {
 int  success;
 char infoLog[512];
 
+// stores how much we're seeing of either texture
+float mixValue = 0.2f;
+
 int main()
 {
-	// GLFW Window를 인스턴스화한다
+	/// glm 테스트
+	// 벡터, 행렬 선언
+	vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
+	mat4 trans = glm::mat4(1.0f);
 
+	// 1,1,0 이동행렬 만듬
+	trans = translate(trans, vec3(1.0f, 1.0f, 0.0f));
+
+	// 벡터 이동
+	vec = trans * vec;
+
+	// 최종 이동 결과
+	cout << vec.x << vec.y << vec.z << endl;
+
+	// 단위 행렬 셋팅
+	trans = mat4(1.0f);
+
+	// z축(vec3(0.0, 0.0, 1.0)) 기준으로 90도(radians(90.0f)) 회전하는 회전행렬만든다
+	trans = rotate(trans, radians(90.0f), vec3(0.0, 0.0, 1.0));
+
+	// xyz축 0.5배 변환행렬
+	trans = scale(trans, vec3(0.5, 0.5, 0.5));
+
+
+	// GLFW Window를 인스턴스화한다
 	// GLFW init
 	glfwInit();
 
@@ -230,15 +258,15 @@ int main()
 
 	/// 텍스쳐 로드 및 셋팅
 	// 텍스쳐 객체 생성
-	unsigned int texture;
-	glGenTextures(1, &texture);
+	unsigned int texture1, texture2;
+	glGenTextures(1, &texture1);
 
 	// 생성한 객체를 GL_TEXTURE_2D에 바인드한다
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glBindTexture(GL_TEXTURE_2D, texture1);
 
 	// S - 오른쪽, T - 위쪽 방향
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 	// 만일 텍스쳐 셋팅이 GL_TEXTURE_BORDER_COLOR 인 경우
 	// 바깥 색상도 지정해야한다
@@ -247,11 +275,16 @@ int main()
 
 	// GL_NEAREST - 가장 가까운 색으로 셋팅
 	// GL_LINEAR - 근처 비슷한 색상으로 셋팅
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	// 텍스쳐 데이터 로드
 	int width, height, nrChannels;
+
+	// 상하반전
+	stbi_set_flip_vertically_on_load(true);
+
+	// 텍스쳐 데이터 불러오기
 	unsigned char* data = stbi_load(
 		"../Texture/wall.jpg",				// 텍스쳐 파일 경로
 		&width,								// 텍스쳐 width
@@ -272,7 +305,59 @@ int main()
 						GL_UNSIGNED_BYTE,		// 데이터 유형
 						data);					// 실제 이미지 데이터
 
+		// glTexImage2D 호출 후에는
+		// 바인딩 된 텍스쳐 오브젝트는 텍스쳐를 가지고 있다
+		// 기본 텍스쳐만 가지고 있으며 밉맵 셋팅을 위해 glGenerateMipmap을 호출한다
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		cout << "Failed to load texture" << endl;
+	}
 
+	// 로드한 다음 데이터 해제
+	stbi_image_free(data);
+
+	// 2번째 텍스쳐 객체 생성
+	glGenTextures(1, &texture2);
+
+	// 생성한 객체를 GL_TEXTURE_2D에 바인드한다
+	glBindTexture(GL_TEXTURE_2D, texture2);
+
+	// S - 오른쪽, T - 위쪽 방향
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	// 만일 텍스쳐 셋팅이 GL_TEXTURE_BORDER_COLOR 인 경우
+	// 바깥 색상도 지정해야한다
+	// float borderColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
+	// glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+	// GL_NEAREST - 가장 가까운 색으로 셋팅
+	// GL_LINEAR - 근처 비슷한 색상으로 셋팅
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	// 텍스쳐 데이터 로드
+	data = stbi_load(
+		"../Texture/awesomeface.png",		// 텍스쳐 파일 경로
+		&width,								// 텍스쳐 width
+		&height,							// 텍스쳐 height
+		&nrChannels,						// 텍스쳐의 컬러 채널의 수
+		0);
+
+	if (data)
+	{
+		// 이전에 로드한 텍스쳐 정보로 텍스쳐를 생성시킨다
+		glTexImage2D(GL_TEXTURE_2D,	// 텍스쳐 타겟 - 위에서 바인드한 텍스쳐 객체
+			0,						// mipmap level - 0은 기본 셋팅
+			GL_RGBA,				// 텍스쳐를 어떤 포맷으로 저장할 것인가 - A 알파 추가
+			width,					// 텍스쳐 width
+			height,					// 텍스쳐 height
+			0,						// 이건 항상 0
+			GL_RGBA,				// 이미지의 포맷 - A 알파 추가
+			GL_UNSIGNED_BYTE,		// 데이터 유형
+			data);					// 실제 이미지 데이터
 
 		// glTexImage2D 호출 후에는
 		// 바인딩 된 텍스쳐 오브젝트는 텍스쳐를 가지고 있다
@@ -286,6 +371,15 @@ int main()
 
 	// 로드한 다음 데이터 해제
 	stbi_image_free(data);
+
+	// tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
+	// OpenGL에게 각 샘플러 택스쳐 셋팅
+	ourShader.use();
+	glUniform1i(glGetUniformLocation(ourShader.ID, "ourTexture1"), 0); // set it manually
+	ourShader.setInt("ourTexture2", 1); // or with shader class
+
+	// 변환 변수 값 셋팅을 위해 유니폼 정보 가져옴
+	unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
 
 	// Render loop
 	// 윈도우 종료 때까지 계속 반복하면서 렌더링한다
@@ -301,26 +395,54 @@ int main()
 		// GL_COLOR_BUFFER_BIT - 컬러 버퍼 클리어
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		glActiveTexture(GL_TEXTURE0);
+
 		// 텍스쳐 바인딩
-		glBindTexture(GL_TEXTURE_2D, texture);
+		glBindTexture(GL_TEXTURE_2D, texture1);
 
-		ourShader.use();
-		ourShader.setFloat("ourColor", 1.0f);
-		/*
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texture2);
+
 		// 오브젝트 렌더링할 때 우리의 쉐이더 프로그램을 사용하겠다
-		glUseProgram(shaderProgram);
+		ourShader.use();
 
-		// 계속 시간 값을 가져와 색상을 변경한다
-		timeValue = glfwGetTime();
-		greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+		// 유니폼 텍스쳐 믹스값 수정
+		ourShader.setFloat("mixValue", mixValue);
 
-		// 가져온 유니폼에 값을 셋팅한다
-		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
-		*/
+		// 변환 행렬 만든 후
+		trans = mat4(1.0f);
+		trans = translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+		trans = rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+
+		// 결과 유니폼에 전송
+		ourShader.setMat4("transform", trans);
+
 		// VAO가 하나뿐이므로 매번 바인딩 할 필요는 없지만
 		// 좀 더 체계적으로 유지하기 위해 매번 바인딩한다
 		// 위에서 0으로 바인딩 해제한 것과 같은 맥락
 		glBindVertexArray(VAO);
+
+		// 오브젝트를 그린다
+		// 인덱스 사용이므로 glDrawArrays -> glDrawElements 변경
+		// glDrawElements가 사용하는 인덱스는 EBO로 등록한 인덱스 배열이다
+		glDrawElements(GL_TRIANGLES,	// 삼각형 그린다
+			6,							// 정점의 수
+			GL_UNSIGNED_INT,			// 인덱스 배열의 타입
+			0);							// 인덱스 배열 시작점
+
+		/// 오브젝트 하나 더 만든다
+
+		// 변환 행렬 만든 후
+		trans = mat4(1.0f);
+
+		// 위치 이동
+		trans = translate(trans, glm::vec3(-0.5f, 0.5f, 0.0f));
+
+		// 스케일 변형
+		trans = scale(trans, vec3(sin((float)glfwGetTime()), sin((float)glfwGetTime()), sin((float)glfwGetTime())));
+
+		// 결과 유니폼에 전송
+		ourShader.setMat4("transform", trans);
 
 		// 오브젝트를 그린다
 		// 인덱스 사용이므로 glDrawArrays -> glDrawElements 변경
@@ -367,4 +489,18 @@ void processInput(GLFWwindow* window)
 	// esc 키 누르면 윈도우 종료 셋팅
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+
+	// 상하 키 입력 시 텍스쳐 믹스 값 변경
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+    {
+        mixValue += 0.001f;
+        if(mixValue >= 1.0f)
+            mixValue = 1.0f;
+    }
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+    {
+        mixValue -= 0.001f;
+        if (mixValue <= 0.0f)
+            mixValue = 0.0f;
+    }
 }

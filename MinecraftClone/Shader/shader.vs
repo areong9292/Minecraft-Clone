@@ -7,10 +7,14 @@ layout (location = 2) in vec2 aTexCoord;		// 입력으로 2차원 벡터 aTexCoord 받는�
 out vec3 vertexColor;							// specify a color output to the fragment shader
 out vec2 TexCoord;
 
+uniform mat4 transform;
+
 void main()
 {
 	// gl_Position - 버텍스 쉐이더의 출력
-	gl_Position = vec4(aPos, 1.0);				// 받은 입력(버텍스) 포지션 지정
+	gl_Position = transform * vec4(aPos, 1.0);	// 받은 입력(버텍스) 포지션 지정
+												// 변환 행렬 곱셈으로 변환 처리
+
 	vertexColor = aColor;						// 출력 값 셋팅, 이 출력은 fragment shader로 전달된다
 	TexCoord = aTexCoord;						// 텍스쳐 좌표 셋팅
 }
