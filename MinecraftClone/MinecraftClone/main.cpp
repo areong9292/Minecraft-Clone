@@ -23,14 +23,58 @@ void processInput(GLFWwindow* window);
 
 // 버텍스, 인덱스 생성
 // OpenGL은 정규화 된 좌표를 처리한다
-float vertices[] = {
+/*float vertices[] = {
 	// positions          // colors           // texture coords
 	 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   2.0f, 2.0f,   // top right
 	 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   2.0f, 0.0f,   // bottom right
 	-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
 	-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 2.0f    // top left 
+};*/
+float vertices[] = {
+	-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 0.0f,
+	 0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
+	 0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 1.0f,
+	 0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 1.0f,
+	-0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 0.0f,
+
+	-0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 0.0f,
+	 0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 1.0f,
+	-0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 0.0f,
+
+	-0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
+	-0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
+
+	 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
+	 0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
+	 0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
+
+	-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 1.0f,
+	 0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
+	 0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
+	-0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
+
+	-0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
+	 0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 0.0f,
+	-0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 1.0f
 };
 
+// 인덱스, 텍스쳐 좌표 전부 버텍스에 집어넣었다
 // note that we start from 0!
 unsigned int indices[] = {  // note that we start from 0!
 	0, 1, 3,  // first Triangle
@@ -44,12 +88,31 @@ float texCoords[] = {
 	0.0f, 0.0f,  // lower-left corner 
 };
 
+
+// 큐브들 위치
+vec3 cubePositions[] = {
+	vec3(0.0f,  0.0f,  0.0f),
+	vec3(2.0f,  5.0f, -15.0f),
+	vec3(-1.5f, -2.2f, -2.5f),
+	vec3(-3.8f, -2.0f, -12.3f),
+	vec3(2.4f, -0.4f, -3.5f),
+	vec3(-1.7f,  3.0f, -7.5f),
+	vec3(1.3f, -2.0f, -2.5f),
+	vec3(1.5f,  2.0f, -2.5f),
+	vec3(1.5f,  0.2f, -1.5f),
+	vec3(-1.3f,  1.0f, -1.5f)
+};
+
 // 작업 후 성공 여부 체크용 변수
 int  success;
 char infoLog[512];
 
 // stores how much we're seeing of either texture
 float mixValue = 0.2f;
+
+// settings
+const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_HEIGHT = 600;
 
 int main()
 {
@@ -96,7 +159,7 @@ int main()
 #endif
 
 	// 윈도우 생성
-	GLFWwindow* window = glfwCreateWindow(800, 600,			// width, height
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT,			// width, height
 		"LearnOpenGL",		// 윈도우 이름 
 		NULL, NULL);
 	if (window == NULL)
@@ -116,6 +179,9 @@ int main()
 	{
 		cout << "Failed to initialize GLAD" << endl;
 	}
+
+	// 깊이 계산을 한다
+	glEnable(GL_DEPTH_TEST);
 
 	// 윈도우 사이즈가 변경되면 뷰포트도 그에 맞게 변경되어야한다
 	// 콜백을 걸어두어 윈도우의 사이즈가 변경되었을 때 자동으로 뷰포트 지정하게 한다
@@ -381,6 +447,34 @@ int main()
 	// 변환 변수 값 셋팅을 위해 유니폼 정보 가져옴
 	unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
 
+	mat4 worldMatrix, viewMatrix, projectionMatrix;
+
+	// 월드 매트릭스
+	worldMatrix = mat4(1.0f);
+
+	// x축 기준으로 -55도 회전
+	worldMatrix = rotate(worldMatrix, radians(-55.0f), vec3(1.0f, 0.0f, 0.0f));
+
+	// 뷰 매트릭스
+	viewMatrix = mat4(1.0f);
+
+	// 약간 뒤로 가게 이동
+	viewMatrix = translate(viewMatrix, vec3(0.0f, 0.0f, -3.0f));
+
+	// 투영 매트릭스
+	projectionMatrix = perspective(
+		radians(45.0f),							// 사이각
+		(float)SCR_WIDTH/ (float)SCR_HEIGHT,	// 화면 비율 (width / height)
+		0.1f,									// 시작 점과 가장 가까운 평면까지의 거리
+		100.0f);								// 시작 점과 가장 먼 평면까지의 거리
+
+	// 월드, 뷰, 투영 행렬 쉐이더에 적용
+	ourShader.setMat4("world", worldMatrix);
+	ourShader.setMat4("view", viewMatrix);
+	ourShader.setMat4("projection", projectionMatrix);
+	
+	float angle = 0.0f;
+
 	// Render loop
 	// 윈도우 종료 때까지 계속 반복하면서 렌더링한다
 	while (!glfwWindowShouldClose(window))
@@ -393,7 +487,8 @@ int main()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
 		// GL_COLOR_BUFFER_BIT - 컬러 버퍼 클리어
-		glClear(GL_COLOR_BUFFER_BIT);
+		// GL_DEPTH_BUFFER_BIT - 깊이 버퍼 클리어
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glActiveTexture(GL_TEXTURE0);
 
@@ -409,19 +504,41 @@ int main()
 		// 유니폼 텍스쳐 믹스값 수정
 		ourShader.setFloat("mixValue", mixValue);
 
-		// 변환 행렬 만든 후
-		trans = mat4(1.0f);
-		trans = translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-		trans = rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-
-		// 결과 유니폼에 전송
-		ourShader.setMat4("transform", trans);
-
 		// VAO가 하나뿐이므로 매번 바인딩 할 필요는 없지만
 		// 좀 더 체계적으로 유지하기 위해 매번 바인딩한다
 		// 위에서 0으로 바인딩 해제한 것과 같은 맥락
 		glBindVertexArray(VAO);
 
+		// 큐브 여러 개 그리기
+		for (unsigned int i = 0; i < 10; i++)
+		{
+			// 변환 행렬 만든 후
+			trans = mat4(1.0f);
+
+			// 큐브 포지션으로 이동 후
+			trans = translate(trans, cubePositions[i]);
+
+			// x축 기준으로 -55도 회전
+			trans = rotate(trans, radians(-55.0f), vec3(1.0f, 0.0f, 0.0f));
+
+			// 회전 값 셋팅
+			angle = 20 * i;
+			
+			// 3번째 박스는 시간에 따라 회전
+			if (i % 3 == 0)
+				angle = 20 * (float)glfwGetTime();
+
+			// 회전 적용
+			trans = rotate(trans, radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
+
+			// 결과 유니폼에 전송
+			ourShader.setMat4("world", trans);
+
+			// 큐브 그리기
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
+
+		/*
 		// 오브젝트를 그린다
 		// 인덱스 사용이므로 glDrawArrays -> glDrawElements 변경
 		// glDrawElements가 사용하는 인덱스는 EBO로 등록한 인덱스 배열이다
@@ -429,9 +546,10 @@ int main()
 			6,							// 정점의 수
 			GL_UNSIGNED_INT,			// 인덱스 배열의 타입
 			0);							// 인덱스 배열 시작점
+		*/
 
+		/*
 		/// 오브젝트 하나 더 만든다
-
 		// 변환 행렬 만든 후
 		trans = mat4(1.0f);
 
@@ -451,6 +569,7 @@ int main()
 			6,							// 정점의 수
 			GL_UNSIGNED_INT,			// 인덱스 배열의 타입
 			0);							// 인덱스 배열 시작점
+		*/
 
 		// 더블 버퍼로 렌더링 버퍼, 준비 버퍼 둘이 바꾼다
 		glfwSwapBuffers(window);

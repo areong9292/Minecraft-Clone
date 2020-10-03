@@ -9,12 +9,16 @@ out vec2 TexCoord;
 
 uniform mat4 transform;
 
+uniform mat4 world;								// 월드
+uniform mat4 view;								// 뷰
+uniform mat4 projection;						// 투영
+
 void main()
 {
 	// gl_Position - 버텍스 쉐이더의 출력
-	gl_Position = transform * vec4(aPos, 1.0);	// 받은 입력(버텍스) 포지션 지정
-												// 변환 행렬 곱셈으로 변환 처리
+	gl_Position = projection * view * world * vec4(aPos, 1.0);	// 받은 입력(버텍스) 포지션 지정
+																// 변환 행렬 곱셈으로 변환 처리
 
-	vertexColor = aColor;						// 출력 값 셋팅, 이 출력은 fragment shader로 전달된다
-	TexCoord = aTexCoord;						// 텍스쳐 좌표 셋팅
+	vertexColor = aColor;										// 출력 값 셋팅, 이 출력은 fragment shader로 전달된다
+	TexCoord = aTexCoord;										// 텍스쳐 좌표 셋팅
 }
