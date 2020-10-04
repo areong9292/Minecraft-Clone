@@ -535,6 +535,7 @@ int main()
 			ourShader.setMat4("world", trans);
 
 			// 큐브 그리기
+			// glDrawArrays - 버텍스만 있으면 그 버텍스들 순서대로 연결한다
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 
