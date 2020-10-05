@@ -114,6 +114,26 @@ float mixValue = 0.2f;
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
+/// 카메라 관련 변수
+// 카메라 위치
+vec3 cameraPos;
+
+// 카메라 타겟
+vec3 cameraTarget;
+
+// 카메라 방향 벡터
+vec3 cameraFront;
+
+// 카메라 업 벡터
+vec3 cameraUp;
+
+// 카메라 이동 속도
+float cameraSpeed = 0.05f;
+
+/// 프레임 계산
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
+
 int main()
 {
 	/// glm 테스트
@@ -447,6 +467,20 @@ int main()
 	// 변환 변수 값 셋팅을 위해 유니폼 정보 가져옴
 	unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
 
+	/// 카메라 정보 셋팅
+	// 카메라 위치
+	cameraPos = vec3(0.0f, 0.0f, 3.0f);
+
+	// 원점을 타겟으로 한다
+	cameraTarget = vec3(0.0f, 0.0f, 0.0f);
+
+	// 카메라 방향 벡터
+	// 첫 오픈 기준으로 화면 쪽이므로 z축 -1.0f 방향이다
+	cameraFront = vec3(0.0f, 0.0f, -1.0f);
+
+	// 카메라 업 벡터
+	cameraUp = vec3(0.0f, 1.0f, 0.0f);
+
 	mat4 worldMatrix, viewMatrix, projectionMatrix;
 
 	// 월드 매트릭스
@@ -459,7 +493,11 @@ int main()
 	viewMatrix = mat4(1.0f);
 
 	// 약간 뒤로 가게 이동
-	viewMatrix = translate(viewMatrix, vec3(0.0f, 0.0f, -3.0f));
+	//viewMatrix = translate(viewMatrix, vec3(0.0f, 0.0f, -3.0f));
+	
+	viewMatrix = lookAt(cameraPos,					// 카메라 위치
+						cameraPos + cameraFront,	// 카메라 방향
+						cameraUp);					// 카메라 위
 
 	// 투영 매트릭스
 	projectionMatrix = perspective(
@@ -468,12 +506,9 @@ int main()
 		0.1f,									// 시작 점과 가장 가까운 평면까지의 거리
 		100.0f);								// 시작 점과 가장 먼 평면까지의 거리
 
-	// 월드, 뷰, 투영 행렬 쉐이더에 적용
-	ourShader.setMat4("world", worldMatrix);
-	ourShader.setMat4("view", viewMatrix);
-	ourShader.setMat4("projection", projectionMatrix);
-	
 	float angle = 0.0f;
+
+	float currentFrame;
 
 	// Render loop
 	// 윈도우 종료 때까지 계속 반복하면서 렌더링한다
@@ -508,6 +543,22 @@ int main()
 		// 좀 더 체계적으로 유지하기 위해 매번 바인딩한다
 		// 위에서 0으로 바인딩 해제한 것과 같은 맥락
 		glBindVertexArray(VAO);
+
+		// 매 프레임마다 뷰 매트릭스 수정
+		viewMatrix = lookAt(cameraPos,					// 카메라 위치
+							cameraPos + cameraFront,	// 카메라 방향
+							cameraUp);					// 카메라 위
+
+		// 프레임 계산
+		currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
+		// 매 프레임마다 변환 행렬 적용
+		// 월드, 뷰, 투영 행렬 쉐이더에 적용
+		ourShader.setMat4("world", worldMatrix);
+		ourShader.setMat4("view", viewMatrix);
+		ourShader.setMat4("projection", projectionMatrix);
 
 		// 큐브 여러 개 그리기
 		for (unsigned int i = 0; i < 10; i++)
@@ -623,4 +674,27 @@ void processInput(GLFWwindow* window)
         if (mixValue <= 0.0f)
             mixValue = 0.0f;
     }
+
+	// 카메라 속도 프레임에 맞게 조정
+	cameraSpeed = 2.5f * deltaTime;
+
+	// 키 입력에 따른 카메라 위치 조정
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	{
+		cameraPos += cameraSpeed * cameraFront;
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+	{
+		cameraPos -= cameraSpeed * cameraFront;
+	}
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+	{
+		// 위치 이동으로 인해 매번 방향 벡터 구해줘야 한다
+		cameraPos -= normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
+	}
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	{
+		// 위치 이동으로 인해 매번 방향 벡터 구해줘야 한다
+		cameraPos += normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
+	}
 }
