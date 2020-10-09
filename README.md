@@ -1,5 +1,5 @@
 # Minecraft-Clone
-OpenGL!
+OpenGL
 
 Make Minecraft with OpenGL ES
 
