@@ -20,6 +20,8 @@ using namespace std;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 // 버텍스, 인덱스 생성
 // OpenGL은 정규화 된 좌표를 처리한다
@@ -88,7 +90,6 @@ float texCoords[] = {
 	0.0f, 0.0f,  // lower-left corner 
 };
 
-
 // 큐브들 위치
 vec3 cubePositions[] = {
 	vec3(0.0f,  0.0f,  0.0f),
@@ -134,6 +135,13 @@ float cameraSpeed = 0.05f;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
+bool firstMouse = true;
+double lastX = 0;
+double lastY = 0;
+float m_yaw = -90.0f;
+float m_pitch = 0.0f;
+float Zoom = 45.0f;
+
 int main()
 {
 	/// glm 테스트
@@ -148,7 +156,7 @@ int main()
 	vec = trans * vec;
 
 	// 최종 이동 결과
-	cout << vec.x << vec.y << vec.z << endl;
+	//cout << vec.x << vec.y << vec.z << endl;
 
 	// 단위 행렬 셋팅
 	trans = mat4(1.0f);
@@ -474,6 +482,16 @@ int main()
 	// 원점을 타겟으로 한다
 	cameraTarget = vec3(0.0f, 0.0f, 0.0f);
 
+	// 마우스 입력
+	// 커서가 창을 벗어나면 작동 안함
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	// 커서 움직임 발생 시 호출 할 콜백 등록
+	glfwSetCursorPosCallback(window, mouse_callback);
+
+	// 마우스 스크롤 시 호출 할 콜백 등록
+	glfwSetScrollCallback(window, scroll_callback);
+
 	// 카메라 방향 벡터
 	// 첫 오픈 기준으로 화면 쪽이므로 z축 -1.0f 방향이다
 	cameraFront = vec3(0.0f, 0.0f, -1.0f);
@@ -548,6 +566,15 @@ int main()
 		viewMatrix = lookAt(cameraPos,					// 카메라 위치
 							cameraPos + cameraFront,	// 카메라 방향
 							cameraUp);					// 카메라 위
+
+
+		// 매 프레임마다 투영 매트릭스 수정
+		projectionMatrix = perspective(
+			radians(Zoom),							// 사이각
+			(float)SCR_WIDTH / (float)SCR_HEIGHT,	// 화면 비율 (width / height)
+			0.1f,									// 시작 점과 가장 가까운 평면까지의 거리
+			100.0f);								// 시작 점과 가장 먼 평면까지의 거리
+
 
 		// 프레임 계산
 		currentFrame = glfwGetTime();
@@ -697,4 +724,46 @@ void processInput(GLFWwindow* window)
 		// 위치 이동으로 인해 매번 방향 벡터 구해줘야 한다
 		cameraPos += normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
 	}
+}
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	if (firstMouse)
+	{
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+	}
+
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos;
+	lastX = xpos;
+	lastY = ypos;
+
+	float sensitivity = 0.01f;
+	xoffset *= sensitivity;
+	yoffset *= sensitivity;
+
+	m_yaw += xoffset;
+	m_pitch += yoffset;
+
+	if (m_pitch > 89.0f)
+		m_pitch = 89.0f;
+	if (m_pitch < -89.0f)
+		m_pitch = -89.0f;
+
+	vec3 direction;
+	direction.x = cos(radians(m_yaw)) * cos(radians(m_pitch));
+	direction.y = sin(radians(m_pitch));
+	direction.z = sin(radians(m_yaw)) * cos(radians(m_pitch));
+	cameraFront = normalize(direction);
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	Zoom -= (float)yoffset;
+	if (Zoom < 1.0f)
+		Zoom = 1.0f;
+	if (Zoom > 45.0f)
+		Zoom = 45.0f;
 }

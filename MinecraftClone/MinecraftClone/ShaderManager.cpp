@@ -43,8 +43,8 @@ ShaderManager::ShaderManager(const char * vertexPath, const char * fragmentPath)
 
 	// 2. compile shader
 	// 작업 후 성공 여부 체크용 변수
-	int  success;
-	char infoLog[512];
+	//int  success;
+	//char infoLog[512];
 
 	/// 쉐이더 셋팅
 	/// 버텍스 쉐이더
