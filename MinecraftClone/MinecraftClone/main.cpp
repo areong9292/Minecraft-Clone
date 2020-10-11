@@ -10,6 +10,8 @@
 
 #include "GLMHeader.h"
 
+#include "Camera.h"
+
 // Image Loader Library
 // 관련 정의 소스 코드 만 포함하도록 헤더 파일을 수정하여
 // 효과적으로 헤더 파일을 .cpp 파일로 변환합니다.
@@ -116,6 +118,8 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 /// 카메라 관련 변수
+Camera* mainCamera = nullptr;
+/*
 // 카메라 위치
 vec3 cameraPos;
 
@@ -141,6 +145,10 @@ double lastY = 0;
 float m_yaw = -90.0f;
 float m_pitch = 0.0f;
 float Zoom = 45.0f;
+*/
+/// 프레임 계산
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
 
 int main()
 {
@@ -188,8 +196,9 @@ int main()
 
 	// 윈도우 생성
 	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT,			// width, height
-		"LearnOpenGL",		// 윈도우 이름 
-		NULL, NULL);
+										"LearnOpenGL",						// 윈도우 이름 
+										NULL, NULL);
+
 	if (window == NULL)
 	{
 		cout << "Failed to create GLFW window" << endl;
@@ -206,6 +215,8 @@ int main()
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		cout << "Failed to initialize GLAD" << endl;
+		glfwTerminate();
+		return -1;
 	}
 
 	// 깊이 계산을 한다
@@ -476,28 +487,60 @@ int main()
 	unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
 
 	/// 카메라 정보 셋팅
+	mainCamera = new Camera();
+	if (mainCamera == nullptr)
+	{
+		cout << "Failed to Init Camera" << endl;
+		glfwTerminate();
+		return -1;
+	}
+
+	// 카메라 객체에 화면 크기 전달
+	mainCamera->Init(SCR_WIDTH, SCR_HEIGHT);
+
 	// 카메라 위치
-	cameraPos = vec3(0.0f, 0.0f, 3.0f);
+	mainCamera->SetPosition(vec3(0.0f, 0.0f, 3.0f));
+	// cameraPos = vec3(0.0f, 0.0f, 3.0f);
 
 	// 원점을 타겟으로 한다
-	cameraTarget = vec3(0.0f, 0.0f, 0.0f);
+	mainCamera->SetTargetPos(vec3(0.0f, 0.0f, 0.0f));
+	// cameraTarget = vec3(0.0f, 0.0f, 0.0f);
 
 	// 마우스 입력
 	// 커서가 창을 벗어나면 작동 안함
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
+	// 카메라 조작 관련 콜백 등록
+	//mainCamera->SetCameraCallback(window);
+
+	// 포인터 정보를 넘겨 람다로 연결해야한다
+	glfwSetWindowUserPointer(window, mainCamera);
+
+	glfwSetCursorPosCallback(window, [](GLFWwindow *window, double x, double y)
+	{
+		if (Camera *mainCamera = static_cast<Camera*>(glfwGetWindowUserPointer(window)))
+			mainCamera->mouse_callback(window, x, y);
+	});
+	glfwSetScrollCallback(window, [](GLFWwindow *window, double xoffset, double yoffset)
+	{
+		if (Camera *mainCamera = static_cast<Camera*>(glfwGetWindowUserPointer(window)))
+			mainCamera->scroll_callback(window, xoffset, yoffset);
+	});
+
 	// 커서 움직임 발생 시 호출 할 콜백 등록
-	glfwSetCursorPosCallback(window, mouse_callback);
+	//glfwSetCursorPosCallback(window, mouse_callback);
 
 	// 마우스 스크롤 시 호출 할 콜백 등록
-	glfwSetScrollCallback(window, scroll_callback);
+	//glfwSetScrollCallback(window, scroll_callback);
 
 	// 카메라 방향 벡터
 	// 첫 오픈 기준으로 화면 쪽이므로 z축 -1.0f 방향이다
-	cameraFront = vec3(0.0f, 0.0f, -1.0f);
+	mainCamera->SetCameraFront(vec3(0.0f, 0.0f, -1.0f));
+	//cameraFront = vec3(0.0f, 0.0f, -1.0f);
 
 	// 카메라 업 벡터
-	cameraUp = vec3(0.0f, 1.0f, 0.0f);
+	mainCamera->SetCameraUp(vec3(0.0f, 1.0f, 0.0f));
+	//cameraUp = vec3(0.0f, 1.0f, 0.0f);
 
 	mat4 worldMatrix, viewMatrix, projectionMatrix;
 
@@ -508,6 +551,9 @@ int main()
 	worldMatrix = rotate(worldMatrix, radians(-55.0f), vec3(1.0f, 0.0f, 0.0f));
 
 	// 뷰 매트릭스
+	mainCamera->SetCameraLookAt();
+	viewMatrix = mainCamera->GetViewMatrix();
+	/*
 	viewMatrix = mat4(1.0f);
 
 	// 약간 뒤로 가게 이동
@@ -516,13 +562,18 @@ int main()
 	viewMatrix = lookAt(cameraPos,					// 카메라 위치
 						cameraPos + cameraFront,	// 카메라 방향
 						cameraUp);					// 카메라 위
+	*/
 
 	// 투영 매트릭스
+	mainCamera->SetCameraPerspective();
+	projectionMatrix = mainCamera->GetProjectionMatrix();
+	/*
 	projectionMatrix = perspective(
 		radians(45.0f),							// 사이각
 		(float)SCR_WIDTH/ (float)SCR_HEIGHT,	// 화면 비율 (width / height)
 		0.1f,									// 시작 점과 가장 가까운 평면까지의 거리
 		100.0f);								// 시작 점과 가장 먼 평면까지의 거리
+	*/
 
 	float angle = 0.0f;
 
@@ -562,19 +613,23 @@ int main()
 		// 위에서 0으로 바인딩 해제한 것과 같은 맥락
 		glBindVertexArray(VAO);
 
+		// 매 프레임마다 뷰, 투영 매트릭스 수정
+		mainCamera->CameraUpdate();
+		viewMatrix = mainCamera->GetViewMatrix();
+		projectionMatrix = mainCamera->GetProjectionMatrix();
+		/*
 		// 매 프레임마다 뷰 매트릭스 수정
 		viewMatrix = lookAt(cameraPos,					// 카메라 위치
 							cameraPos + cameraFront,	// 카메라 방향
 							cameraUp);					// 카메라 위
-
-
+		
 		// 매 프레임마다 투영 매트릭스 수정
 		projectionMatrix = perspective(
 			radians(Zoom),							// 사이각
 			(float)SCR_WIDTH / (float)SCR_HEIGHT,	// 화면 비율 (width / height)
 			0.1f,									// 시작 점과 가장 가까운 평면까지의 거리
 			100.0f);								// 시작 점과 가장 먼 평면까지의 거리
-
+		*/
 
 		// 프레임 계산
 		currentFrame = glfwGetTime();
@@ -702,7 +757,43 @@ void processInput(GLFWwindow* window)
             mixValue = 0.0f;
     }
 
-	// 카메라 속도 프레임에 맞게 조정
+	// 카메라 속도 프레임에 맞게 조정 및 조작
+	if (mainCamera != nullptr)
+	{
+		// 카메라 스피드 조작
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+		{
+			mainCamera->SetCameraSpeedUp();
+		}
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
+		{
+			mainCamera->SetCameraSpeedDown();
+		}
+
+		// 카메라 스피드 프레임에 맞게 계산
+		mainCamera->SetCameraSpeed(deltaTime);
+
+		// 키 입력에 따른 카메라 위치 조정
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		{
+			mainCamera->SetCameraUpDownMove(true);
+		}
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		{
+			mainCamera->SetCameraUpDownMove(false);
+		}
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		{
+			// 위치 이동으로 인해 매번 방향 벡터 구해줘야 한다
+			mainCamera->SetCameraLeftRightMove(true);
+		}
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		{
+			// 위치 이동으로 인해 매번 방향 벡터 구해줘야 한다
+			mainCamera->SetCameraLeftRightMove(false);
+		}
+	}
+	/*
 	cameraSpeed = 2.5f * deltaTime;
 
 	// 키 입력에 따른 카메라 위치 조정
@@ -724,8 +815,10 @@ void processInput(GLFWwindow* window)
 		// 위치 이동으로 인해 매번 방향 벡터 구해줘야 한다
 		cameraPos += normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
 	}
+	*/
 }
 
+/*
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
 	if (firstMouse)
@@ -767,3 +860,4 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 	if (Zoom > 45.0f)
 		Zoom = 45.0f;
 }
+*/
