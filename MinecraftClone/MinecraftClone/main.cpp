@@ -8,9 +8,11 @@
 
 #include "ShaderManager.h"
 
-#include "GLMHeader.h"
+#include <GLMHeader.h>
 
 #include "Camera.h"
+
+#include <string>
 
 // Image Loader Library
 // 관련 정의 소스 코드 만 포함하도록 헤더 파일을 수정하여
@@ -614,7 +616,7 @@ int main()
 		glBindVertexArray(VAO);
 
 		// 매 프레임마다 뷰, 투영 매트릭스 수정
-		mainCamera->CameraUpdate();
+		mainCamera->UpdateComponent();
 		viewMatrix = mainCamera->GetViewMatrix();
 		projectionMatrix = mainCamera->GetProjectionMatrix();
 		/*
@@ -632,7 +634,7 @@ int main()
 		*/
 
 		// 프레임 계산
-		currentFrame = glfwGetTime();
+		currentFrame = (float)glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
@@ -655,7 +657,7 @@ int main()
 			trans = rotate(trans, radians(-55.0f), vec3(1.0f, 0.0f, 0.0f));
 
 			// 회전 값 셋팅
-			angle = 20 * i;
+			angle = (float)(20 * i);
 			
 			// 3번째 박스는 시간에 따라 회전
 			if (i % 3 == 0)

@@ -1,10 +1,11 @@
 #pragma once
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "GLMHeader.h"
+#include <GLMHeader.h>
 
+#include <Component/Component.h>
 #include <iostream>
-class Camera
+class Camera : Component
 {
 public:
 	Camera();
@@ -40,8 +41,10 @@ public:
 
 	void SetCameraCallback(GLFWwindow* window);
 
-	// 매 프레임마다 카메라 정보 갱신
-	void CameraUpdate();
+	// 매 프레임마다 호출, 카메라 정보 갱신
+	virtual void UpdateComponent() override;
+
+	//void CameraUpdate();
 
 	void SetCameraSpeed(float deltaTime);
 	void SetCameraSpeedUp();

@@ -146,14 +146,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Includes\Component\Component.cpp" />
+    <ClCompile Include="..\Includes\Component\GameObject.cpp" />
+    <ClCompile Include="..\Includes\Component\Transform.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Includes\Component\Component.h" />
+    <ClInclude Include="..\Includes\Component\GameObject.h" />
+    <ClInclude Include="..\Includes\Component\Singleton.h" />
+    <ClInclude Include="..\Includes\Component\Transform.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="GLMHeader.h" />
     <ClInclude Include="ShaderManager.h" />
   </ItemGroup>
   <ItemGroup>

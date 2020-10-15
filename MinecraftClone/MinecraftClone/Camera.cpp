@@ -2,6 +2,11 @@
 
 Camera::Camera()
 {
+	// 컴포넌트 이름 셋팅
+	SetComponentName("Camera");
+
+	cout << GetComponentName() << endl;
+
 	// 카메라 이동 속도
 	cameraSpeed = 0.05f;
 
@@ -118,7 +123,8 @@ void Camera::SetCameraCallback(GLFWwindow * window)
 	//glfwSetScrollCallback(window, scroll_callback);
 }
 
-void Camera::CameraUpdate()
+// 매 프레임마다 호출
+void Camera::UpdateComponent()
 {
 	// 뷰, 투영 매트릭스 갱신
 	SetCameraLookAt();
@@ -165,8 +171,8 @@ void Camera::mouse_callback(GLFWwindow * window, double xpos, double ypos)
 		firstMouse = false;
 	}
 
-	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos;
+	float xoffset = (float)(xpos - lastX);
+	float yoffset = (float)(lastY - ypos);
 	lastX = xpos;
 	lastY = ypos;
 

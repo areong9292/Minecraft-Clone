@@ -9,7 +9,7 @@
 #include <sstream>
 #include <iostream>
 
-#include "GLMHeader.h"
+#include <GLMHeader.h>
 
 using namespace std;
 
