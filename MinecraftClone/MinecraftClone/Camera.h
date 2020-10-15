@@ -3,9 +3,8 @@
 #include <GLFW/glfw3.h>
 #include <GLMHeader.h>
 
-#include <Component/Component.h>
 #include <iostream>
-class Camera : Component
+class Camera
 {
 public:
 	Camera();
@@ -42,9 +41,7 @@ public:
 	void SetCameraCallback(GLFWwindow* window);
 
 	// 매 프레임마다 호출, 카메라 정보 갱신
-	virtual void UpdateComponent() override;
-
-	//void CameraUpdate();
+	void CameraUpdate();
 
 	void SetCameraSpeed(float deltaTime);
 	void SetCameraSpeedUp();
@@ -68,6 +65,9 @@ private:
 	// 카메라 이동 속도
 	float cameraSpeed = 0.05f;
 	float cameraSpeedCalc = 2.5f;
+
+	// 카메라 감도
+	float cameraSensitivity = 0.01f;
 
 	// 첫 마우스 동작인지 여부
 	bool firstMouse = true;

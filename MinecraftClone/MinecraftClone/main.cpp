@@ -120,7 +120,7 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 /// 카메라 관련 변수
-Camera* mainCamera = nullptr;
+Camera* sceneCamera = nullptr;
 /*
 // 카메라 위치
 vec3 cameraPos;
@@ -489,23 +489,23 @@ int main()
 	unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
 
 	/// 카메라 정보 셋팅
-	mainCamera = new Camera();
-	if (mainCamera == nullptr)
+	sceneCamera = new Camera();
+	if (sceneCamera == nullptr)
 	{
-		cout << "Failed to Init Camera" << endl;
+		cout << "Failed to Init Scene Camera" << endl;
 		glfwTerminate();
 		return -1;
 	}
 
 	// 카메라 객체에 화면 크기 전달
-	mainCamera->Init(SCR_WIDTH, SCR_HEIGHT);
+	sceneCamera->Init(SCR_WIDTH, SCR_HEIGHT);
 
 	// 카메라 위치
-	mainCamera->SetPosition(vec3(0.0f, 0.0f, 3.0f));
+	sceneCamera->SetPosition(vec3(0.0f, 0.0f, 3.0f));
 	// cameraPos = vec3(0.0f, 0.0f, 3.0f);
 
 	// 원점을 타겟으로 한다
-	mainCamera->SetTargetPos(vec3(0.0f, 0.0f, 0.0f));
+	sceneCamera->SetTargetPos(vec3(0.0f, 0.0f, 0.0f));
 	// cameraTarget = vec3(0.0f, 0.0f, 0.0f);
 
 	// 마우스 입력
@@ -516,7 +516,7 @@ int main()
 	//mainCamera->SetCameraCallback(window);
 
 	// 포인터 정보를 넘겨 람다로 연결해야한다
-	glfwSetWindowUserPointer(window, mainCamera);
+	glfwSetWindowUserPointer(window, sceneCamera);
 
 	glfwSetCursorPosCallback(window, [](GLFWwindow *window, double x, double y)
 	{
@@ -537,11 +537,11 @@ int main()
 
 	// 카메라 방향 벡터
 	// 첫 오픈 기준으로 화면 쪽이므로 z축 -1.0f 방향이다
-	mainCamera->SetCameraFront(vec3(0.0f, 0.0f, -1.0f));
+	sceneCamera->SetCameraFront(vec3(0.0f, 0.0f, -1.0f));
 	//cameraFront = vec3(0.0f, 0.0f, -1.0f);
 
 	// 카메라 업 벡터
-	mainCamera->SetCameraUp(vec3(0.0f, 1.0f, 0.0f));
+	sceneCamera->SetCameraUp(vec3(0.0f, 1.0f, 0.0f));
 	//cameraUp = vec3(0.0f, 1.0f, 0.0f);
 
 	mat4 worldMatrix, viewMatrix, projectionMatrix;
@@ -553,8 +553,8 @@ int main()
 	worldMatrix = rotate(worldMatrix, radians(-55.0f), vec3(1.0f, 0.0f, 0.0f));
 
 	// 뷰 매트릭스
-	mainCamera->SetCameraLookAt();
-	viewMatrix = mainCamera->GetViewMatrix();
+	sceneCamera->SetCameraLookAt();
+	viewMatrix = sceneCamera->GetViewMatrix();
 	/*
 	viewMatrix = mat4(1.0f);
 
@@ -567,8 +567,8 @@ int main()
 	*/
 
 	// 투영 매트릭스
-	mainCamera->SetCameraPerspective();
-	projectionMatrix = mainCamera->GetProjectionMatrix();
+	sceneCamera->SetCameraPerspective();
+	projectionMatrix = sceneCamera->GetProjectionMatrix();
 	/*
 	projectionMatrix = perspective(
 		radians(45.0f),							// 사이각
@@ -616,9 +616,10 @@ int main()
 		glBindVertexArray(VAO);
 
 		// 매 프레임마다 뷰, 투영 매트릭스 수정
-		mainCamera->UpdateComponent();
-		viewMatrix = mainCamera->GetViewMatrix();
-		projectionMatrix = mainCamera->GetProjectionMatrix();
+		sceneCamera->CameraUpdate();
+
+		viewMatrix = sceneCamera->GetViewMatrix();
+		projectionMatrix = sceneCamera->GetProjectionMatrix();
 		/*
 		// 매 프레임마다 뷰 매트릭스 수정
 		viewMatrix = lookAt(cameraPos,					// 카메라 위치
@@ -760,39 +761,39 @@ void processInput(GLFWwindow* window)
     }
 
 	// 카메라 속도 프레임에 맞게 조정 및 조작
-	if (mainCamera != nullptr)
+	if (sceneCamera != nullptr)
 	{
 		// 카메라 스피드 조작
 		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
 		{
-			mainCamera->SetCameraSpeedUp();
+			sceneCamera->SetCameraSpeedUp();
 		}
 		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
 		{
-			mainCamera->SetCameraSpeedDown();
+			sceneCamera->SetCameraSpeedDown();
 		}
 
 		// 카메라 스피드 프레임에 맞게 계산
-		mainCamera->SetCameraSpeed(deltaTime);
+		sceneCamera->SetCameraSpeed(deltaTime);
 
 		// 키 입력에 따른 카메라 위치 조정
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		{
-			mainCamera->SetCameraUpDownMove(true);
+			sceneCamera->SetCameraUpDownMove(true);
 		}
 		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 		{
-			mainCamera->SetCameraUpDownMove(false);
+			sceneCamera->SetCameraUpDownMove(false);
 		}
 		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 		{
 			// 위치 이동으로 인해 매번 방향 벡터 구해줘야 한다
-			mainCamera->SetCameraLeftRightMove(true);
+			sceneCamera->SetCameraLeftRightMove(true);
 		}
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		{
 			// 위치 이동으로 인해 매번 방향 벡터 구해줘야 한다
-			mainCamera->SetCameraLeftRightMove(false);
+			sceneCamera->SetCameraLeftRightMove(false);
 		}
 	}
 	/*

@@ -2,11 +2,6 @@
 
 Camera::Camera()
 {
-	// 컴포넌트 이름 셋팅
-	SetComponentName("Camera");
-
-	cout << GetComponentName() << endl;
-
 	// 카메라 이동 속도
 	cameraSpeed = 0.05f;
 
@@ -124,7 +119,7 @@ void Camera::SetCameraCallback(GLFWwindow * window)
 }
 
 // 매 프레임마다 호출
-void Camera::UpdateComponent()
+void Camera::CameraUpdate()
 {
 	// 뷰, 투영 매트릭스 갱신
 	SetCameraLookAt();
@@ -139,11 +134,13 @@ void Camera::SetCameraSpeed(float deltaTime)
 void Camera::SetCameraSpeedUp()
 {
 	cameraSpeedCalc = 5.0f;
+	cameraSensitivity = 0.1f;
 }
 
 void Camera::SetCameraSpeedDown()
 {
 	cameraSpeedCalc = 2.5f;
+	cameraSensitivity = 0.01f;
 }
 
 void Camera::SetCameraLeftRightMove(bool isLeft)
@@ -175,10 +172,9 @@ void Camera::mouse_callback(GLFWwindow * window, double xpos, double ypos)
 	float yoffset = (float)(lastY - ypos);
 	lastX = xpos;
 	lastY = ypos;
-
-	float sensitivity = 0.01f;
-	xoffset *= sensitivity;
-	yoffset *= sensitivity;
+	
+	xoffset *= cameraSensitivity;
+	yoffset *= cameraSensitivity;
 
 	m_yaw += xoffset;
 	m_pitch += yoffset;
