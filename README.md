@@ -1,4 +1,4 @@
 # Minecraft-Clone
-Make Minecraft with OpenGL ES
+Make Minecraft with OpenGL
 
 Make Game Engine!
