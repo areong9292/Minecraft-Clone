@@ -37,47 +37,47 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 	-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 2.0f    // top left 
 };*/
 float vertices[] = {
-	-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 0.0f,
-	 0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 1.0f,
-	-0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,
+	 0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,
+	 0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,
+	 0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,
+	-0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,
 
-	-0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 0.0f,
-	 0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 1.0f,
-	-0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 0.0f,
+	-0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,
+	 0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,
+	-0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,
 
-	-0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,
+	-0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,
 
-	 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,
+	 0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,
+	 0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,
 
-	-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
-	 0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
-	-0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 0.0f,
-	-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,
+	 0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,
+	 0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,
+	 0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,
+	-0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,
 
-	-0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     1.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,     0.0f, 1.0f
+	-0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,
+	 0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,
+	-0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f
 };
 
 // 인덱스, 텍스쳐 좌표 전부 버텍스에 집어넣었다
@@ -324,6 +324,14 @@ int main()
 
 	glEnableVertexAttribArray(2);
 
+	unsigned int lightVAO;
+	glGenVertexArrays(1, &lightVAO);
+	glBindVertexArray(lightVAO);
+	// we only need to bind to the VBO, the container's VBO's data already contains the data.
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	// set the vertex attribute 
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
 
 	// note that this is allowed,
 	// glVertexAttribPointer 호출은 VBO를
@@ -634,6 +642,9 @@ int main()
 			100.0f);								// 시작 점과 가장 먼 평면까지의 거리
 		*/
 
+		// 라이트 적용
+		ourShader.setVec3("lightColor", sin((float)glfwGetTime()), cos((float)glfwGetTime()), sin((float)glfwGetTime()));
+
 		// 프레임 계산
 		currentFrame = (float)glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
@@ -720,6 +731,7 @@ int main()
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
+	glDeleteVertexArrays(1, &lightVAO);
 
 	ourShader.Destroy();
 
