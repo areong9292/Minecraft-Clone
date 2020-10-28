@@ -589,6 +589,8 @@ int main()
 
 	float currentFrame;
 
+	vec3 lightPos(1.2f, 1.0f, 2.0f);
+
 	// Render loop
 	// 윈도우 종료 때까지 계속 반복하면서 렌더링한다
 	while (!glfwWindowShouldClose(window))
@@ -657,7 +659,7 @@ int main()
 		ourShader.setMat4("projection", projectionMatrix);
 
 		// 큐브 여러 개 그리기
-		for (unsigned int i = 0; i < 10; i++)
+		for (unsigned int i = 0; i < 1; i++)
 		{
 			// 변환 행렬 만든 후
 			trans = mat4(1.0f);
@@ -685,6 +687,18 @@ int main()
 			// glDrawArrays - 버텍스만 있으면 그 버텍스들 순서대로 연결한다
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
+
+		// light object 그리기
+		// 이 오브젝트로 나중에 라이트 구성하는 듯
+		trans = mat4(1.0f);
+		trans = translate(trans, lightPos);
+		trans = scale(trans, vec3(0.2f));
+
+		ourShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+		ourShader.setMat4("world", trans);
+		ourShader.setMat4("view", viewMatrix);
+		ourShader.setMat4("projection", projectionMatrix);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		/*
 		// 오브젝트를 그린다
