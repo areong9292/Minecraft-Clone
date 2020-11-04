@@ -691,11 +691,11 @@ int main()
 			//angle = (float)(20 * i);
 			
 			// 3번째 박스는 시간에 따라 회전
-			//if (i % 3 == 0)
-				//angle = 20 * (float)glfwGetTime();
+			if (i % 3 == 0)
+				angle = 20 * (float)glfwGetTime();
 
 			// 회전 적용
-			//trans = rotate(trans, radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
+			trans = rotate(trans, radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
 
 			// 결과 유니폼에 전송
 			ourShader.setMat4("world", trans);

@@ -24,7 +24,8 @@ void main()
 	TexCoord = aTexCoord;										// 텍스쳐 좌표 셋팅
 
 	FragPos = vec3(world * vec4(aPos, 1.0));
-	Normal = aNormal;
+	//Normal = aNormal;
+	Normal = mat3(transpose(inverse(world))) * aNormal;
 
 	// gl_Position - 버텍스 쉐이더의 출력
 	gl_Position = projection * view * vec4(FragPos,1.0);		// 받은 입력(버텍스) 포지션 지정
