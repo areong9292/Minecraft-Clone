@@ -821,6 +821,14 @@ void processInput(GLFWwindow* window)
 			// 위치 이동으로 인해 매번 방향 벡터 구해줘야 한다
 			sceneCamera->SetCameraLeftRightMove(false);
 		}
+		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+		{
+			sceneCamera->SetCameraTopBottomMove(true);
+		}
+		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+		{
+			sceneCamera->SetCameraTopBottomMove(false);
+		}
 	}
 	/*
 	cameraSpeed = 2.5f * deltaTime;

@@ -48,6 +48,7 @@ public:
 	void SetCameraSpeedDown();
 	void SetCameraLeftRightMove(bool isLeft);
 	void SetCameraUpDownMove(bool isUp);
+	void SetCameraTopBottomMove(bool isTop);
 
 private:
 	// 카메라 위치

@@ -159,6 +159,14 @@ void Camera::SetCameraUpDownMove(bool isUp)
 		cameraPos -= cameraSpeed * cameraFront;
 }
 
+void Camera::SetCameraTopBottomMove(bool isTop)
+{
+	if (isTop)
+		cameraPos += cameraSpeed * cameraUp;
+	else
+		cameraPos -= cameraSpeed * cameraUp;
+}
+
 void Camera::mouse_callback(GLFWwindow * window, double xpos, double ypos)
 {
 	if (firstMouse)
