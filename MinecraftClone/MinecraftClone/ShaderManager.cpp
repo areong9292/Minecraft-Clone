@@ -16,7 +16,7 @@ ShaderManager::ShaderManager(ShaderType type)
 		LoadShader("../Shader/AmbientShader.vs", "../Shader/AmbientShader.fs");
 		break;
 	case ShaderManager::DIFFUSE:
-		LoadShader("../Shader/shader.vs", "../Shader/shader.fs");
+		LoadShader("../Shader/DiffuseShader.vs", "../Shader/DiffuseShader.fs");
 		break;
 	case ShaderManager::SPECULAR:
 		LoadShader("../Shader/shader.vs", "../Shader/shader.fs");

@@ -37,49 +37,49 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 	-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 2.0f    // top left 
 };*/
 
-int verticesOffset = 8;
+int verticesOffset = 11;
 float vertices[] = {
-	-0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,
-	 0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,
-	-0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,	0.0f,  0.0f, -1.0f,
+	 0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,	0.0f,  0.0f, -1.0f,
+	 0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,	0.0f,  0.0f, -1.0f,
+	 0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,	0.0f,  0.0f, -1.0f,
+	-0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,	0.0f,  0.0f, -1.0f,
+	-0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,	0.0f,  0.0f, -1.0f,
 
-	-0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,
-	 0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,
-	-0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,
+	-0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,	0.0f,  0.0f, 1.0f,
+	 0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,	0.0f,  0.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,	0.0f,  0.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,	0.0f,  0.0f, 1.0f,
+	-0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,	0.0f,  0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,	0.0f,  0.0f, 1.0f,
 
-	-0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,
+	-0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,	-1.0f,  0.0f,  0.0f,
+	-0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,	-1.0f,  0.0f,  0.0f,
+	-0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,	-1.0f,  0.0f,  0.0f,
+	-0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,	-1.0f,  0.0f,  0.0f,
+	-0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,	-1.0f,  0.0f,  0.0f,
+	-0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,	-1.0f,  0.0f,  0.0f,
 
-	 0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,
+	 0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,	1.0f,  0.0f,  0.0f,
+	 0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,	1.0f,  0.0f,  0.0f,
+	 0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,	1.0f,  0.0f,  0.0f,
+	 0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,	1.0f,  0.0f,  0.0f,
+	 0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,	1.0f,  0.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,	1.0f,  0.0f,  0.0f,
 
-	-0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,
-	 0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,
-	-0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,
-	-0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,
+	-0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,	0.0f, -1.0f,  0.0f,
+	 0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,	0.0f, -1.0f,  0.0f,
+	 0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,	0.0f, -1.0f,  0.0f,
+	 0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,	0.0f, -1.0f,  0.0f,
+	-0.5f, -0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,	0.0f, -1.0f,  0.0f,
+	-0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,	0.0f, -1.0f,  0.0f,
 
-	-0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f
+	-0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,	0.0f,  1.0f,  0.0f,
+	 0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f,	0.0f,  1.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,	0.0f,  1.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,	0.0f,  1.0f,  0.0f,
+	-0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,	0.0f,  1.0f,  0.0f,
+	-0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,	0.0f,  1.0f,  0.0f
 };
 
 // 인덱스, 텍스쳐 좌표 전부 버텍스에 집어넣었다
@@ -230,7 +230,7 @@ int main()
 	// 콜백을 걸어두어 윈도우의 사이즈가 변경되었을 때 자동으로 뷰포트 지정하게 한다
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	ShaderManager ourShader(ShaderManager::ShaderType::AMBIENT);
+	ShaderManager ourShader(ShaderManager::ShaderType::DIFFUSE);
 	ShaderManager lightShader(ShaderManager::ShaderType::DEFAULT);
 
 	/// 그래픽 카드에 데이터 저장
@@ -326,6 +326,17 @@ int main()
 		(void*)(6 * sizeof(float)));	// 데이터 버퍼가 시작하는 위치 - 포지션 6개 뒤에 텍스쳐이므로 6 * float로 포지션 위치 건너뛴다
 
 	glEnableVertexAttribArray(2);
+
+	// normal attribute
+	glVertexAttribPointer(
+		3,								// 구성하려는 정점 속성, 노말을 지정하는데 쉐이더의 location = 3 이므로 3
+		3,								// 버텍스 속성의 크기 - vec3 이므로 3
+		GL_FLOAT,						// 버텍스 데이터 유형 - vec3 이므로 float
+		GL_FALSE,						// 데이터 정규화 여부 - 이미 정규화로 넣었으므로 false
+		verticesOffset * sizeof(float),	// 정점 별 메모리 보폭 계산
+		(void*)(8 * sizeof(float)));	// 데이터 버퍼가 시작하는 위치 - 포지션 8개 뒤에 텍스쳐이므로 8 * float로 포지션 위치 건너뛴다
+
+	glEnableVertexAttribArray(3);
 
 	unsigned int lightVAO;
 	glGenVertexArrays(1, &lightVAO);
@@ -561,7 +572,7 @@ int main()
 	worldMatrix = mat4(1.0f);
 
 	// x축 기준으로 -55도 회전
-	worldMatrix = rotate(worldMatrix, radians(-55.0f), vec3(1.0f, 0.0f, 0.0f));
+	//worldMatrix = rotate(worldMatrix, radians(-55.0f), vec3(1.0f, 0.0f, 0.0f));
 
 	// 뷰 매트릭스
 	sceneCamera->SetCameraLookAt();
@@ -649,7 +660,9 @@ int main()
 		*/
 
 		// 라이트 적용
-		ourShader.setVec3("lightColor", lightColor);
+		ourShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
+		ourShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+		ourShader.setVec3("lightPos", lightPos);
 
 		// 프레임 계산
 		currentFrame = (float)glfwGetTime();
@@ -672,17 +685,17 @@ int main()
 			trans = translate(trans, cubePositions[i]);
 
 			// x축 기준으로 -55도 회전
-			trans = rotate(trans, radians(-55.0f), vec3(1.0f, 0.0f, 0.0f));
+			//trans = rotate(trans, radians(-55.0f), vec3(1.0f, 0.0f, 0.0f));
 
 			// 회전 값 셋팅
-			angle = (float)(20 * i);
+			//angle = (float)(20 * i);
 			
 			// 3번째 박스는 시간에 따라 회전
-			if (i % 3 == 0)
-				angle = 20 * (float)glfwGetTime();
+			//if (i % 3 == 0)
+				//angle = 20 * (float)glfwGetTime();
 
 			// 회전 적용
-			trans = rotate(trans, radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
+			//trans = rotate(trans, radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
 
 			// 결과 유니폼에 전송
 			ourShader.setMat4("world", trans);
