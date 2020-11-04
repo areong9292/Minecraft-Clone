@@ -17,10 +17,22 @@ using namespace std;
 class ShaderManager
 {
 public:
+	enum ShaderType
+	{
+		DEFAULT,
+		AMBIENT,
+		DIFFUSE,
+		SPECULAR,
+	};
+
 	unsigned int ID;			// 쉐이더 프로그램 ID
 
 	// 쉐이더 파일 로드
 	ShaderManager(const char* vertexPath, const char* fragmentPath);
+	ShaderManager(ShaderType type);
+
+	void LoadShader(const char * vertexPath, const char * fragmentPath);
+	void CompileShader(const char* vShaderCode, const char* fShaderCode);
 
 	void Destroy();
 

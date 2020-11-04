@@ -2,6 +2,32 @@
 
 ShaderManager::ShaderManager(const char * vertexPath, const char * fragmentPath)
 {
+	LoadShader(vertexPath, fragmentPath);
+}
+
+ShaderManager::ShaderManager(ShaderType type)
+{
+	switch (type)
+	{
+	case ShaderManager::DEFAULT:
+		LoadShader("../Shader/shader.vs", "../Shader/shader.fs");
+		break;
+	case ShaderManager::AMBIENT:
+		LoadShader("../Shader/AmbientShader.vs", "../Shader/AmbientShader.fs");
+		break;
+	case ShaderManager::DIFFUSE:
+		LoadShader("../Shader/shader.vs", "../Shader/shader.fs");
+		break;
+	case ShaderManager::SPECULAR:
+		LoadShader("../Shader/shader.vs", "../Shader/shader.fs");
+		break;
+	default:
+		break;
+	}
+}
+
+void ShaderManager::LoadShader(const char * vertexPath, const char * fragmentPath)
+{
 	// 1. load shader file and read code
 	string vertexCode;
 	string fragmentCode;
@@ -40,7 +66,11 @@ ShaderManager::ShaderManager(const char * vertexPath, const char * fragmentPath)
 	const char* vShaderCode = vertexCode.c_str();
 	const char* fShaderCode = fragmentCode.c_str();
 
+	CompileShader(vShaderCode, fShaderCode);
+}
 
+void ShaderManager::CompileShader(const char* vShaderCode, const char* fShaderCode)
+{
 	// 2. compile shader
 	// 작업 후 성공 여부 체크용 변수
 	//int  success;

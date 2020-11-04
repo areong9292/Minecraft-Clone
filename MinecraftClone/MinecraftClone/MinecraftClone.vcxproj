@@ -163,6 +163,8 @@
     <ClInclude Include="ShaderManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Shader\AmbientShader.fs" />
+    <None Include="..\Shader\AmbientShader.vs" />
     <None Include="..\Shader\shader.fs" />
     <None Include="..\Shader\shader.vs" />
   </ItemGroup>
