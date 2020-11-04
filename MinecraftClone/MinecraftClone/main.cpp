@@ -36,6 +36,8 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 	-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
 	-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 2.0f    // top left 
 };*/
+
+int verticesOffset = 8;
 float vertices[] = {
 	-0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 0.0f,
 	 0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     1.0f, 0.0f,
@@ -297,7 +299,7 @@ int main()
 		3,								// 버텍스 속성의 크기 - vec3 이므로 3
 		GL_FLOAT,						// 버텍스 데이터 유형 - vec3 이므로 float
 		GL_FALSE,						// 데이터 정규화 여부 - 이미 정규화로 넣었으므로 false
-		8 * sizeof(float),				// 정점 별 메모리 보폭 계산
+		verticesOffset * sizeof(float),	// 정점 별 메모리 보폭 계산
 		(void*)0);						// 데이터 버퍼가 시작하는 위치
 
 	glEnableVertexAttribArray(0);
@@ -308,7 +310,7 @@ int main()
 		3,								// 버텍스 속성의 크기 - vec3 이므로 3
 		GL_FLOAT,						// 버텍스 데이터 유형 - vec3 이므로 float
 		GL_FALSE,						// 데이터 정규화 여부 - 이미 정규화로 넣었으므로 false
-		8 * sizeof(float),				// 정점 별 메모리 보폭 계산
+		verticesOffset * sizeof(float),	// 정점 별 메모리 보폭 계산
 		(void*)(3 * sizeof(float)));	// 데이터 버퍼가 시작하는 위치 - 포지션 3개 뒤에 컬러이므로 3 * float로 포지션 위치 건너뛴다
 
 	glEnableVertexAttribArray(1);
@@ -319,7 +321,7 @@ int main()
 		2,								// 버텍스 속성의 크기 - vec2 이므로 2
 		GL_FLOAT,						// 버텍스 데이터 유형 - vec3 이므로 float
 		GL_FALSE,						// 데이터 정규화 여부 - 이미 정규화로 넣었으므로 false
-		8 * sizeof(float),				// 정점 별 메모리 보폭 계산
+		verticesOffset * sizeof(float),	// 정점 별 메모리 보폭 계산
 		(void*)(6 * sizeof(float)));	// 데이터 버퍼가 시작하는 위치 - 포지션 6개 뒤에 텍스쳐이므로 6 * float로 포지션 위치 건너뛴다
 
 	glEnableVertexAttribArray(2);
@@ -590,6 +592,7 @@ int main()
 	float currentFrame;
 
 	vec3 lightPos(1.2f, 1.0f, 2.0f);
+	vec3 lightColor(1.0f, 1.0f, 1.0f);
 
 	// Render loop
 	// 윈도우 종료 때까지 계속 반복하면서 렌더링한다
@@ -645,7 +648,7 @@ int main()
 		*/
 
 		// 라이트 적용
-		ourShader.setVec3("lightColor", sin((float)glfwGetTime()), cos((float)glfwGetTime()), sin((float)glfwGetTime()));
+		ourShader.setVec3("lightColor", lightColor);
 
 		// 프레임 계산
 		currentFrame = (float)glfwGetTime();
