@@ -88,5 +88,11 @@
     <None Include="..\Shader\DiffuseShader.vs">
       <Filter>Shader</Filter>
     </None>
+    <None Include="..\Shader\SpecularShader.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shader\SpecularShader.vs">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

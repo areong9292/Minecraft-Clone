@@ -19,7 +19,7 @@ ShaderManager::ShaderManager(ShaderType type)
 		LoadShader("../Shader/DiffuseShader.vs", "../Shader/DiffuseShader.fs");
 		break;
 	case ShaderManager::SPECULAR:
-		LoadShader("../Shader/shader.vs", "../Shader/shader.fs");
+		LoadShader("../Shader/SpecularShader.vs", "../Shader/SpecularShader.fs");
 		break;
 	default:
 		break;
