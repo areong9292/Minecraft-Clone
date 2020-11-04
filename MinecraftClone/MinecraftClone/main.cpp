@@ -230,7 +230,8 @@ int main()
 	// 콜백을 걸어두어 윈도우의 사이즈가 변경되었을 때 자동으로 뷰포트 지정하게 한다
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	ShaderManager ourShader(ShaderManager::ShaderType::DEFAULT);
+	ShaderManager ourShader(ShaderManager::ShaderType::AMBIENT);
+	ShaderManager lightShader(ShaderManager::ShaderType::DEFAULT);
 
 	/// 그래픽 카드에 데이터 저장
 	// vertex buffer objects - VBO
@@ -496,7 +497,7 @@ int main()
 	ourShader.setInt("ourTexture2", 1); // or with shader class
 
 	// 변환 변수 값 셋팅을 위해 유니폼 정보 가져옴
-	unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
+	//unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
 
 	/// 카메라 정보 셋팅
 	sceneCamera = new Camera();
@@ -693,14 +694,16 @@ int main()
 
 		// light object 그리기
 		// 이 오브젝트로 나중에 라이트 구성하는 듯
+		lightShader.use();
+
 		trans = mat4(1.0f);
 		trans = translate(trans, lightPos);
 		trans = scale(trans, vec3(0.2f));
 
-		ourShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
-		ourShader.setMat4("world", trans);
-		ourShader.setMat4("view", viewMatrix);
-		ourShader.setMat4("projection", projectionMatrix);
+		lightShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+		lightShader.setMat4("world", trans);
+		lightShader.setMat4("view", viewMatrix);
+		lightShader.setMat4("projection", projectionMatrix);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		/*
@@ -750,6 +753,7 @@ int main()
 	glDeleteBuffers(1, &EBO);
 	glDeleteVertexArrays(1, &lightVAO);
 
+	lightShader.Destroy();
 	ourShader.Destroy();
 
 	// GLFW 자원을 해제한다

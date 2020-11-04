@@ -10,7 +10,7 @@ ShaderManager::ShaderManager(ShaderType type)
 	switch (type)
 	{
 	case ShaderManager::DEFAULT:
-		LoadShader("../Shader/shader.vs", "../Shader/shader.fs");
+		LoadShader("../Shader/DefaultShader.vs", "../Shader/DefaultShader.fs");
 		break;
 	case ShaderManager::AMBIENT:
 		LoadShader("../Shader/AmbientShader.vs", "../Shader/AmbientShader.fs");
