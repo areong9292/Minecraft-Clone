@@ -4,7 +4,9 @@
 #include <GLMHeader.h>
 
 #include <iostream>
-class Camera
+
+#include "../Includes/Component/Transform.h"
+class Camera : Transform
 {
 public:
 	Camera();
@@ -13,8 +15,8 @@ public:
 	void Init(int screenWidth, int screenHeight);
 
 	// 카메라 위치
-	void SetPosition(vec3 position);
-	vec3 GetPosition();
+	void SetCameraPos(vec3 position);
+	vec3 GetCameraPos();
 
 	// 카메라 대상
 	void SetTargetPos(vec3 cameraTarget);
@@ -41,7 +43,7 @@ public:
 	void SetCameraCallback(GLFWwindow* window);
 
 	// 매 프레임마다 호출, 카메라 정보 갱신
-	void CameraUpdate();
+	virtual void UpdateComponent() override;
 
 	void SetCameraSpeed(float deltaTime);
 	void SetCameraSpeedUp();

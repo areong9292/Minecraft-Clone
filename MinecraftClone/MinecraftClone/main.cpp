@@ -525,7 +525,7 @@ int main()
 	sceneCamera->Init(SCR_WIDTH, SCR_HEIGHT);
 
 	// 카메라 위치
-	sceneCamera->SetPosition(vec3(0.0f, 0.0f, 3.0f));
+	sceneCamera->SetCameraPos(vec3(0.0f, 0.0f, 3.0f));
 	// cameraPos = vec3(0.0f, 0.0f, 3.0f);
 
 	// 원점을 타겟으로 한다
@@ -646,7 +646,7 @@ int main()
 		glBindVertexArray(VAO);
 
 		// 매 프레임마다 뷰, 투영 매트릭스 수정
-		sceneCamera->CameraUpdate();
+		sceneCamera->UpdateComponent();
 
 		viewMatrix = sceneCamera->GetViewMatrix();
 		projectionMatrix = sceneCamera->GetProjectionMatrix();
@@ -668,7 +668,7 @@ int main()
 		ourShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
 		ourShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
 		ourShader.setVec3("lightPos", lightPos);
-		ourShader.setVec3("viewPos", sceneCamera->GetPosition());
+		ourShader.setVec3("viewPos", sceneCamera->GetCameraPos());
 
 		// 프레임 계산
 		currentFrame = (float)glfwGetTime();

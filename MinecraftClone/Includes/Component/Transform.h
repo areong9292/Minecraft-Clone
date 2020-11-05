@@ -14,5 +14,16 @@ public:
 	// 매 프레임마다 호출
 	virtual void UpdateComponent() override;
 
+	void SetPosition(vec3 position);
+	void SetPosition(float x, float y, float z);
+	vec3 GetPosition();
+
+	void SetRotation(vec3 rotation);
+	void SetRotation(float x, float y, float z);
+	vec3 GetRotation();
+
+	void SetScale(vec3 scale);
+	void SetScale(float x, float y, float z);
+	vec3 GetScale();
 };
 

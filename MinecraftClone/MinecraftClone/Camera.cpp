@@ -32,14 +32,14 @@ void Camera::Init(int screenWidth, int screenHeight)
 	this->screenHeight = screenHeight;
 }
 
-void Camera::SetPosition(vec3 position)
+void Camera::SetCameraPos(vec3 position)
 {
-	this->cameraPos = position;
+	_position = position;
 }
 
-vec3 Camera::GetPosition()
+vec3 Camera::GetCameraPos()
 {
-	return cameraPos;
+	return _position;
 }
 
 void Camera::SetTargetPos(vec3 cameraTarget)
@@ -84,8 +84,9 @@ mat4 Camera::GetViewMatrix()
 
 void Camera::SetCameraLookAt()
 {
-	viewMatrix = lookAt(cameraPos,					// 카메라 위치
-		cameraPos + cameraFront,	// 카메라 방향
+	viewMatrix = lookAt(
+		_position,					// 카메라 위치
+		_position + cameraFront,	// 카메라 방향
 		cameraUp);					// 카메라 위
 }
 
@@ -119,7 +120,7 @@ void Camera::SetCameraCallback(GLFWwindow * window)
 }
 
 // 매 프레임마다 호출
-void Camera::CameraUpdate()
+void Camera::UpdateComponent()
 {
 	// 뷰, 투영 매트릭스 갱신
 	SetCameraLookAt();
@@ -146,25 +147,25 @@ void Camera::SetCameraSpeedDown()
 void Camera::SetCameraLeftRightMove(bool isLeft)
 {
 	if (isLeft)
-		cameraPos -= normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
+		_position -= normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
 	else
-		cameraPos += normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
+		_position += normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
 }
 
 void Camera::SetCameraUpDownMove(bool isUp)
 {
 	if (isUp)
-		cameraPos += cameraSpeed * cameraFront;
+		_position += cameraSpeed * cameraFront;
 	else
-		cameraPos -= cameraSpeed * cameraFront;
+		_position -= cameraSpeed * cameraFront;
 }
 
 void Camera::SetCameraTopBottomMove(bool isTop)
 {
 	if (isTop)
-		cameraPos += cameraSpeed * cameraUp;
+		_position += cameraSpeed * cameraUp;
 	else
-		cameraPos -= cameraSpeed * cameraUp;
+		_position -= cameraSpeed * cameraUp;
 }
 
 void Camera::mouse_callback(GLFWwindow * window, double xpos, double ypos)
