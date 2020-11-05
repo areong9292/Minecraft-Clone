@@ -247,7 +247,7 @@ int main()
 	// 인덱스 배열
 	// element buffer objects - EBO
 
-	unsigned int VBO, VAO, EBO;
+	unsigned int VBO, VAO;// , EBO;
 
 	// VAO 한개를 생성한다
 	glGenVertexArrays(1, &VAO);
@@ -256,7 +256,7 @@ int main()
 	glGenBuffers(1, &VBO);
 
 	// EBO 한개를 생성한다
-	glGenBuffers(1, &EBO);
+	//glGenBuffers(1, &EBO);
 
 	// 1. 먼저 정점 배열 객체를 바인딩 한 다음
 	// 2. 정점 버퍼를 바인딩하고 설정 한 다음
@@ -282,13 +282,13 @@ int main()
 									// GL_STATIC_DRAW - 한번 정의, 여러 번 사용
 
 	// EBO를 GL_ELEMENT_ARRAY_BUFFER로 등록
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
 	// GL_ELEMENT_ARRAY_BUFFER에 인덱스 배열을 등록한다
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER,	// 우리가 데이터를 복사할 버퍼 타입
-		sizeof(indices),			// 복사 데이터 크기
-		indices,					// 복사할 데이터
-		GL_STATIC_DRAW);			// 그래픽 카드가 데이터를 어떻게 다룰 것인가 정의
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER,	// 우리가 데이터를 복사할 버퍼 타입
+	//	sizeof(indices),			// 복사 데이터 크기
+	//	indices,					// 복사할 데이터
+	//	GL_STATIC_DRAW);			// 그래픽 카드가 데이터를 어떻게 다룰 것인가 정의
 									// GL_STATIC_DRAW - 한번 정의, 여러 번 사용
 
 	/// 버텍스 속성 지정
@@ -341,8 +341,10 @@ int main()
 	unsigned int lightVAO;
 	glGenVertexArrays(1, &lightVAO);
 	glBindVertexArray(lightVAO);
+
 	// we only need to bind to the VBO, the container's VBO's data already contains the data.
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
 	// set the vertex attribute 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -769,7 +771,7 @@ int main()
 	// 사용한 GL 객체들 해제
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
+	//glDeleteBuffers(1, &EBO);
 	glDeleteVertexArrays(1, &lightVAO);
 
 	lightShader.Destroy();
