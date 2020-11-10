@@ -70,7 +70,7 @@ private:
 	float cameraSpeedCalc = 2.5f;
 
 	// 카메라 감도
-	float cameraSensitivity = 0.01f;
+	float cameraSensitivity = 0.05f;
 
 	// 첫 마우스 동작인지 여부
 	bool firstMouse = true;
