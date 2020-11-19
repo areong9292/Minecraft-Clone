@@ -23,6 +23,7 @@ public:
 		AMBIENT,
 		DIFFUSE,
 		SPECULAR,
+		MATERIAL,
 	};
 
 	unsigned int ID;			// 쉐이더 프로그램 ID

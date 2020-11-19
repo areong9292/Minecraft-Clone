@@ -169,6 +169,8 @@
     <None Include="..\Shader\DefaultShader.vs" />
     <None Include="..\Shader\DiffuseShader.fs" />
     <None Include="..\Shader\DiffuseShader.vs" />
+    <None Include="..\Shader\MaterialShader.fs" />
+    <None Include="..\Shader\MaterialShader.vs" />
     <None Include="..\Shader\shader.fs" />
     <None Include="..\Shader\shader.vs" />
     <None Include="..\Shader\SpecularShader.fs" />

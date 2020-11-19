@@ -21,6 +21,9 @@ ShaderManager::ShaderManager(ShaderType type)
 	case ShaderManager::SPECULAR:
 		LoadShader("../Shader/SpecularShader.vs", "../Shader/SpecularShader.fs");
 		break;
+	case ShaderManager::MATERIAL:
+		LoadShader("../Shader/MaterialShader.vs", "../Shader/MaterialShader.fs");
+		break;
 	default:
 		break;
 	}

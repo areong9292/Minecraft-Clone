@@ -230,7 +230,7 @@ int main()
 	// 콜백을 걸어두어 윈도우의 사이즈가 변경되었을 때 자동으로 뷰포트 지정하게 한다
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	ShaderManager ourShader(ShaderManager::ShaderType::SPECULAR);
+	ShaderManager ourShader(ShaderManager::ShaderType::MATERIAL);
 	ShaderManager lightShader(ShaderManager::ShaderType::DEFAULT);
 
 	/// 그래픽 카드에 데이터 저장
@@ -669,6 +669,17 @@ int main()
 		ourShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
 		ourShader.setVec3("lightPos", lightPos);
 		ourShader.setVec3("viewPos", sceneCamera->GetCameraPos());
+
+		// 머테리얼 셋팅
+		ourShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+		ourShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+		ourShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+		ourShader.setFloat("material.shininess", 32.0f);
+
+		// 라이트 셋팅
+		ourShader.setVec3("light.ambient", lightColor);
+		ourShader.setVec3("light.diffuse", lightColor); // darken diffuse light a bit
+		ourShader.setVec3("light.specular", lightColor);
 
 		// 프레임 계산
 		currentFrame = (float)glfwGetTime();
