@@ -22,7 +22,7 @@ uniform vec3 viewPos;							// 카메라 위치
 struct Material {
     vec3 ambient;
     sampler2D diffuse;
-    vec3 specular;
+    sampler2D specular;
     float shininess;
 }; 
   
@@ -43,7 +43,7 @@ void main()
 {
 	// ambient - 주변광 - 전체적으로 조명 색상을 얇게 깐다
     // vec3 ambient = material.ambient * lightColor;
-	vec3 ambient  = light.ambient * material.ambient;
+	vec3 ambient  = light.ambient * vec3(texture(material.diffuse, TexCoord));
 
 	// diffuse - 난반사광 - 법선과 빛의 방향 내적이 양수인 경우(180 안쪽으로 들어올 경우)만 라이트 적용
 	vec3 norm = normalize(Normal);
@@ -57,12 +57,13 @@ void main()
 	vec3 reflectDir = reflect(-lightDir, norm);									// 반사 방향을 구한다
 	float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);	// 반사 방향과 카메라 위치 내적, 하이라이트를 위한 pow 계산
 	//vec3 specular = material.specular * spec * lightColor;						// 빛 세기 적용
-	vec3 specular = light.specular * (spec * material.specular);  
+	vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoord));
 
 	// ourTexture1, ourTexture2 섞어서 사용
 	// 최종 컬러 값이 두 텍스쳐의 조합이다
 	// 3번째 인자 값 만큼 두 텍스쳐 사이를 선형보간 한다
 	// 0이 첫번째 전체, 1이 두번째 전체이므로 0.2는 첫번째 텍스쳐 80%, 두번째 텍스쳐 20%다
+	//FragColor = vec4(ambient + diffuse + specular, 1.0);   
 	FragColor = mix(texture(ourTexture1, TexCoord), texture(ourTexture2, TexCoord), mixValue) * vec4(vertexColor * (ambient + diffuse + specular), 1.0);
 	//* vec4(vertexColor, 1.0);	// 텍스쳐 셋팅
 }

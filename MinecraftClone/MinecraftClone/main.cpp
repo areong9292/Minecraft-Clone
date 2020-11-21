@@ -471,10 +471,10 @@ int main()
 
 	// 텍스쳐 데이터 로드
 	data = stbi_load(
-		"../Texture/awesomeface.png",		// 텍스쳐 파일 경로
-		&width,								// 텍스쳐 width
-		&height,							// 텍스쳐 height
-		&nrChannels,						// 텍스쳐의 컬러 채널의 수
+		"../Texture/container2_specular.png",		// 텍스쳐 파일 경로
+		&width,										// 텍스쳐 width
+		&height,									// 텍스쳐 height
+		&nrChannels,								// 텍스쳐의 컬러 채널의 수
 		0);
 
 	if (data)
@@ -614,7 +614,11 @@ int main()
 	{
 		//lightPos.x = 1.2f * sin((float)glfwGetTime());
 		//lightPos.z = 2.0f * cos((float)glfwGetTime());
-		//lightPos.x = 1.2f * sin((float)glfwGetTime());
+		//lightPos.y = 1.2f * sin((float)glfwGetTime());
+
+		//lightColor.x = 1.2f * sin((float)glfwGetTime());
+		//lightColor.z = 2.0f * cos((float)glfwGetTime());
+		//lightColor.y = 1.2f * sin((float)glfwGetTime());
 		// 입력 처리
 		processInput(window);
 
@@ -673,7 +677,7 @@ int main()
 		// 머테리얼 셋팅
 		ourShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
 		ourShader.setInt("material.diffuse", 0);
-		ourShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+		ourShader.setInt("material.specular", 1);
 		ourShader.setFloat("material.shininess", 32.0f);
 
 		// 라이트 셋팅
@@ -709,10 +713,10 @@ int main()
 			
 			// 3번째 박스는 시간에 따라 회전
 			if (i % 3 == 0)
-				angle = 20 * (float)glfwGetTime();
+				angle = 40 * (float)glfwGetTime();
 
 			// 회전 적용
-			trans = rotate(trans, radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
+			trans = rotate(trans, radians(angle), glm::vec3(1.0f, 1.0f, 1.0f));
 
 			trans = scale(trans, vec3(0.5, 0.5, 0.5));
 
