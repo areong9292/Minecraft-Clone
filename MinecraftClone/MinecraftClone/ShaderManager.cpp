@@ -23,6 +23,8 @@ ShaderManager::ShaderManager(ShaderType type)
 		break;
 	case ShaderManager::MATERIAL:
 		LoadShader("../Shader/MaterialShader.vs", "../Shader/MaterialShader.fs");
+	case ShaderManager::LIGHTINGMAP:
+		LoadShader("../Shader/LightingmapShader.vs", "../Shader/LightingmapShader.fs");
 		break;
 	default:
 		break;

@@ -230,7 +230,7 @@ int main()
 	// 콜백을 걸어두어 윈도우의 사이즈가 변경되었을 때 자동으로 뷰포트 지정하게 한다
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	ShaderManager ourShader(ShaderManager::ShaderType::MATERIAL);
+	ShaderManager ourShader(ShaderManager::ShaderType::LIGHTINGMAP);
 	ShaderManager lightShader(ShaderManager::ShaderType::DEFAULT);
 
 	/// 그래픽 카드에 데이터 저장
@@ -417,7 +417,7 @@ int main()
 
 	// 텍스쳐 데이터 불러오기
 	unsigned char* data = stbi_load(
-		"../Texture/wall.jpg",				// 텍스쳐 파일 경로
+		"../Texture/container2.png",		// 텍스쳐 파일 경로
 		&width,								// 텍스쳐 width
 		&height,							// 텍스쳐 height
 		&nrChannels,						// 텍스쳐의 컬러 채널의 수
@@ -428,11 +428,11 @@ int main()
 		// 이전에 로드한 텍스쳐 정보로 텍스쳐를 생성시킨다
 		glTexImage2D(GL_TEXTURE_2D,				// 텍스쳐 타겟 - 위에서 바인드한 텍스쳐 객체
 						0,						// mipmap level - 0은 기본 셋팅
-						GL_RGB,					// 텍스쳐를 어떤 포맷으로 저장할 것인가
+						GL_RGBA,				// 텍스쳐를 어떤 포맷으로 저장할 것인가
 						width,					// 텍스쳐 width
 						height,					// 텍스쳐 height
 						0,						// 이건 항상 0
-						GL_RGB,					// 이미지의 포맷
+						GL_RGBA,				// 이미지의 포맷
 						GL_UNSIGNED_BYTE,		// 데이터 유형
 						data);					// 실제 이미지 데이터
 
@@ -612,8 +612,8 @@ int main()
 	// 윈도우 종료 때까지 계속 반복하면서 렌더링한다
 	while (!glfwWindowShouldClose(window))
 	{
-		lightPos.x = 1.2f * sin((float)glfwGetTime());
-		lightPos.z = 2.0f * cos((float)glfwGetTime());
+		//lightPos.x = 1.2f * sin((float)glfwGetTime());
+		//lightPos.z = 2.0f * cos((float)glfwGetTime());
 		//lightPos.x = 1.2f * sin((float)glfwGetTime());
 		// 입력 처리
 		processInput(window);
@@ -672,7 +672,7 @@ int main()
 
 		// 머테리얼 셋팅
 		ourShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
-		ourShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+		ourShader.setInt("material.diffuse", 0);
 		ourShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
 		ourShader.setFloat("material.shininess", 32.0f);
 
@@ -869,71 +869,43 @@ void processInput(GLFWwindow* window)
 			sceneCamera->SetCameraTopBottomMove(false);
 		}
 	}
-	/*
-	cameraSpeed = 2.5f * deltaTime;
-
-	// 키 입력에 따른 카메라 위치 조정
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-	{
-		cameraPos += cameraSpeed * cameraFront;
-	}
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-	{
-		cameraPos -= cameraSpeed * cameraFront;
-	}
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-	{
-		// 위치 이동으로 인해 매번 방향 벡터 구해줘야 한다
-		cameraPos -= normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
-	}
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-	{
-		// 위치 이동으로 인해 매번 방향 벡터 구해줘야 한다
-		cameraPos += normalize(cross(cameraFront, cameraUp)) * cameraSpeed;
-	}
-	*/
 }
 
-/*
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+// utility function for loading a 2D texture from file
+// ---------------------------------------------------
+unsigned int loadTexture(char const * path)
 {
-	if (firstMouse)
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+
+	int width, height, nrComponents;
+	unsigned char *data = stbi_load(path, &width, &height, &nrComponents, 0);
+	if (data)
 	{
-		lastX = xpos;
-		lastY = ypos;
-		firstMouse = false;
+		GLenum format;
+		if (nrComponents == 1)
+			format = GL_RED;
+		else if (nrComponents == 3)
+			format = GL_RGB;
+		else if (nrComponents == 4)
+			format = GL_RGBA;
+
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		stbi_image_free(data);
+	}
+	else
+	{
+		std::cout << "Texture failed to load at path: " << path << std::endl;
+		stbi_image_free(data);
 	}
 
-	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos;
-	lastX = xpos;
-	lastY = ypos;
-
-	float sensitivity = 0.01f;
-	xoffset *= sensitivity;
-	yoffset *= sensitivity;
-
-	m_yaw += xoffset;
-	m_pitch += yoffset;
-
-	if (m_pitch > 89.0f)
-		m_pitch = 89.0f;
-	if (m_pitch < -89.0f)
-		m_pitch = -89.0f;
-
-	vec3 direction;
-	direction.x = cos(radians(m_yaw)) * cos(radians(m_pitch));
-	direction.y = sin(radians(m_pitch));
-	direction.z = sin(radians(m_yaw)) * cos(radians(m_pitch));
-	cameraFront = normalize(direction);
+	return textureID;
 }
-
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-{
-	Zoom -= (float)yoffset;
-	if (Zoom < 1.0f)
-		Zoom = 1.0f;
-	if (Zoom > 45.0f)
-		Zoom = 45.0f;
-}
-*/
