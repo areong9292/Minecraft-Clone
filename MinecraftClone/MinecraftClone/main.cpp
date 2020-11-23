@@ -230,7 +230,7 @@ int main()
 	// 콜백을 걸어두어 윈도우의 사이즈가 변경되었을 때 자동으로 뷰포트 지정하게 한다
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	ShaderManager ourShader(ShaderManager::ShaderType::LIGHTINGMAP);
+	ShaderManager ourShader(ShaderManager::ShaderType::ATTENUATION);
 	ShaderManager lightShader(ShaderManager::ShaderType::DEFAULT);
 
 	/// 그래픽 카드에 데이터 저장
@@ -684,6 +684,12 @@ int main()
 		ourShader.setVec3("light.ambient", lightColor);
 		ourShader.setVec3("light.diffuse", lightColor); // darken diffuse light a bit
 		ourShader.setVec3("light.specular", lightColor);
+		ourShader.setVec3("light.direction", -0.2f, -1.0f, -0.3f);
+
+		// Set Attenuation info
+		ourShader.setFloat("light.constant", 1.0f);
+		ourShader.setFloat("light.linear", 0.09f);
+		ourShader.setFloat("light.quadratic", 0.032f);
 
 		// 프레임 계산
 		currentFrame = (float)glfwGetTime();
@@ -697,7 +703,7 @@ int main()
 		ourShader.setMat4("projection", projectionMatrix);
 
 		// 큐브 여러 개 그리기
-		for (unsigned int i = 0; i < 1; i++)
+		for (unsigned int i = 0; i < 10; i++)
 		{
 			// 변환 행렬 만든 후
 			trans = mat4(1.0f);
@@ -712,11 +718,13 @@ int main()
 			//angle = (float)(20 * i);
 			
 			// 3번째 박스는 시간에 따라 회전
-			if (i % 3 == 0)
+			//if (i % 3 == 0)
 				angle = 40 * (float)glfwGetTime();
 
+			//float angle = 20.0f * i;
+
 			// 회전 적용
-			trans = rotate(trans, radians(angle), glm::vec3(1.0f, 1.0f, 1.0f));
+			trans = rotate(trans, radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
 			trans = scale(trans, vec3(0.5, 0.5, 0.5));
 

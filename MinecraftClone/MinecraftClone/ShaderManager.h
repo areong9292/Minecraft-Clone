@@ -25,6 +25,8 @@ public:
 		SPECULAR,
 		MATERIAL,
 		LIGHTINGMAP,
+		DIRECTIONLIGHT,
+		ATTENUATION,
 	};
 
 	unsigned int ID;			// 쉐이더 프로그램 ID

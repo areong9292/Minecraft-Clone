@@ -165,10 +165,14 @@
   <ItemGroup>
     <None Include="..\Shader\AmbientShader.fs" />
     <None Include="..\Shader\AmbientShader.vs" />
+    <None Include="..\Shader\AttenuationShader.fs" />
+    <None Include="..\Shader\AttenuationShader.vs" />
     <None Include="..\Shader\DefaultShader.fs" />
     <None Include="..\Shader\DefaultShader.vs" />
     <None Include="..\Shader\DiffuseShader.fs" />
     <None Include="..\Shader\DiffuseShader.vs" />
+    <None Include="..\Shader\DirectionalLightShader.fs" />
+    <None Include="..\Shader\DirectionalLightShader.vs" />
     <None Include="..\Shader\LightingmapShader.fs" />
     <None Include="..\Shader\LightingmapShader.vs" />
     <None Include="..\Shader\MaterialShader.fs" />

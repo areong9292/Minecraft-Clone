@@ -106,5 +106,17 @@
     <None Include="..\Shader\LightingmapShader.vs">
       <Filter>Shader</Filter>
     </None>
+    <None Include="..\Shader\DirectionalLightShader.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shader\DirectionalLightShader.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shader\AttenuationShader.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shader\AttenuationShader.vs">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>
