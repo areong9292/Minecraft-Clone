@@ -33,6 +33,9 @@ ShaderManager::ShaderManager(ShaderType type)
 	case ShaderManager::ATTENUATION:
 		LoadShader("../Shader/AttenuationShader.vs", "../Shader/AttenuationShader.fs");
 		break;
+	case ShaderManager::SPOTLIGHT:
+		LoadShader("../Shader/SpotlightShader.vs", "../Shader/SpotlightShader.fs");
+		break;
 	default:
 		break;
 	}

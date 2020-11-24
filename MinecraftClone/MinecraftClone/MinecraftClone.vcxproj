@@ -181,6 +181,8 @@
     <None Include="..\Shader\shader.vs" />
     <None Include="..\Shader\SpecularShader.fs" />
     <None Include="..\Shader\SpecularShader.vs" />
+    <None Include="..\Shader\SpotlightShader.fs" />
+    <None Include="..\Shader\SpotlightShader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

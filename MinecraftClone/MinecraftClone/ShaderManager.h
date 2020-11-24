@@ -27,6 +27,7 @@ public:
 		LIGHTINGMAP,
 		DIRECTIONLIGHT,
 		ATTENUATION,
+		SPOTLIGHT,
 	};
 
 	unsigned int ID;			// 쉐이더 프로그램 ID
