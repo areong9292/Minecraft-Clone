@@ -653,7 +653,7 @@ int main()
 		ourShader.setVec3("viewPos", sceneCamera->GetCameraPos());
 
 		// 머테리얼 셋팅
-		ourShader.setInt("material.diffuse", 0.8f);
+		ourShader.setInt("material.diffuse", 0);
 		ourShader.setInt("material.specular", 1);
 		ourShader.setFloat("material.shininess", 32.0f);
 
@@ -671,8 +671,8 @@ int main()
 			ourShader.setVec3("pointLights[" + to_string(i) + "].diffuse", 0.8f, 0.8f, 0.8f);
 			ourShader.setVec3("pointLights[" + to_string(i) + "].specular", 1.0f, 1.0f, 1.0f);
 			ourShader.setFloat("pointLights[" + to_string(i) + "].constant", 1.0f);
-			ourShader.setFloat("pointLights[" + to_string(i) + "].linear", 0.09);
-			ourShader.setFloat("pointLights[" + to_string(i) + "].quadratic", 0.032);
+			ourShader.setFloat("pointLights[" + to_string(i) + "].linear", 0.09f);
+			ourShader.setFloat("pointLights[" + to_string(i) + "].quadratic", 0.032f);
 		}
 
 		// spotLight
@@ -682,8 +682,8 @@ int main()
 		ourShader.setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
 		ourShader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
 		ourShader.setFloat("spotLight.constant", 1.0f);
-		ourShader.setFloat("spotLight.linear", 0.09);
-		ourShader.setFloat("spotLight.quadratic", 0.032);
+		ourShader.setFloat("spotLight.linear", 0.09f);
+		ourShader.setFloat("spotLight.quadratic", 0.032f);
 		ourShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
 		ourShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
 
