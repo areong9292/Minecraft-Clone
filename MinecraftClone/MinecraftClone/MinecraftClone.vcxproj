@@ -177,6 +177,8 @@
     <None Include="..\Shader\LightingmapShader.vs" />
     <None Include="..\Shader\MaterialShader.fs" />
     <None Include="..\Shader\MaterialShader.vs" />
+    <None Include="..\Shader\MultipleLightsShader.fs" />
+    <None Include="..\Shader\MultipleLightsShader.vs" />
     <None Include="..\Shader\shader.fs" />
     <None Include="..\Shader\shader.vs" />
     <None Include="..\Shader\SpecularShader.fs" />

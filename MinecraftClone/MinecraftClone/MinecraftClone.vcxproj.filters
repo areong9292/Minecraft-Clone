@@ -124,5 +124,11 @@
     <None Include="..\Shader\SpotlightShader.vs">
       <Filter>Shader</Filter>
     </None>
+    <None Include="..\Shader\MultipleLightsShader.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="..\Shader\MultipleLightsShader.vs">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

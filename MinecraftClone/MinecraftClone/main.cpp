@@ -82,20 +82,6 @@ float vertices[] = {
 	-0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 1.0f,     0.0f, 1.0f,	0.0f,  1.0f,  0.0f
 };
 
-// 인덱스, 텍스쳐 좌표 전부 버텍스에 집어넣었다
-// note that we start from 0!
-unsigned int indices[] = {  // note that we start from 0!
-	0, 1, 3,  // first Triangle
-	1, 2, 3   // second Triangle
-};
-
-float texCoords[] = {
-
-	0.5f, 1.0f,   // top-center corner 
-	1.0f, 0.0f,  // lower-right corner
-	0.0f, 0.0f,  // lower-left corner 
-};
-
 // 큐브들 위치
 vec3 cubePositions[] = {
 	vec3(0.0f, 0.0f, 0.0f),
@@ -108,6 +94,14 @@ vec3 cubePositions[] = {
 	vec3(1.5f,  2.0f, -2.5f),
 	vec3(1.5f,  0.2f, -1.5f),
 	vec3(-1.3f,  1.0f, -1.5f)
+};
+
+// 라이트 위치
+vec3 pointLightPositions[] = {
+	vec3(0.7f,  0.2f,  2.0f),
+	vec3(2.3f, -3.3f, -4.0f),
+	vec3(-4.0f,  2.0f, -12.0f),
+	vec3(0.0f,  0.0f, -3.0f)
 };
 
 // 작업 후 성공 여부 체크용 변수
@@ -230,7 +224,7 @@ int main()
 	// 콜백을 걸어두어 윈도우의 사이즈가 변경되었을 때 자동으로 뷰포트 지정하게 한다
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	ShaderManager ourShader(ShaderManager::ShaderType::SPOTLIGHT);
+	ShaderManager ourShader(ShaderManager::ShaderType::MULTIPLELIGHTS);
 	ShaderManager lightShader(ShaderManager::ShaderType::DEFAULT);
 
 	/// 그래픽 카드에 데이터 저장
@@ -654,48 +648,44 @@ int main()
 
 		viewMatrix = sceneCamera->GetViewMatrix();
 		projectionMatrix = sceneCamera->GetProjectionMatrix();
-		/*
-		// 매 프레임마다 뷰 매트릭스 수정
-		viewMatrix = lookAt(cameraPos,					// 카메라 위치
-							cameraPos + cameraFront,	// 카메라 방향
-							cameraUp);					// 카메라 위
 		
-		// 매 프레임마다 투영 매트릭스 수정
-		projectionMatrix = perspective(
-			radians(Zoom),							// 사이각
-			(float)SCR_WIDTH / (float)SCR_HEIGHT,	// 화면 비율 (width / height)
-			0.1f,									// 시작 점과 가장 가까운 평면까지의 거리
-			100.0f);								// 시작 점과 가장 먼 평면까지의 거리
-		*/
-
-		// 라이트 적용
-		ourShader.setVec3("objectColor", 1.0f, 1.0f, 1.0f);
-		ourShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
-		ourShader.setVec3("lightPos", lightPos);
+		// 카메라 위치 셋팅
 		ourShader.setVec3("viewPos", sceneCamera->GetCameraPos());
 
 		// 머테리얼 셋팅
-		ourShader.setVec3("material.ambient", 1.0f, 1.0f, 1.0f);
 		ourShader.setInt("material.diffuse", 0.8f);
 		ourShader.setInt("material.specular", 1);
 		ourShader.setFloat("material.shininess", 32.0f);
 
-		// 라이트 셋팅
-		ourShader.setVec3("light.ambient", 0.1f, 0.1f, 0.1f);
-		ourShader.setVec3("light.diffuse", 0.8f, 0.8f, 0.8f);
-		ourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-		//ourShader.setVec3("light.direction", -0.2f, -1.0f, -0.3f);
+		// directional light
+		ourShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
+		ourShader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+		ourShader.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
+		ourShader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
 
-		ourShader.setVec3("light.position", sceneCamera->GetCameraPos());
-		ourShader.setVec3("light.direction", sceneCamera->GetCameraFront());
+		// point light 1
+		for (int i = 0; i < 4; i++)
+		{
+			ourShader.setVec3("pointLights[" + to_string(i) + "].position", pointLightPositions[i]);
+			ourShader.setVec3("pointLights[" + to_string(i) + "].ambient", 0.05f, 0.05f, 0.05f);
+			ourShader.setVec3("pointLights[" + to_string(i) + "].diffuse", 0.8f, 0.8f, 0.8f);
+			ourShader.setVec3("pointLights[" + to_string(i) + "].specular", 1.0f, 1.0f, 1.0f);
+			ourShader.setFloat("pointLights[" + to_string(i) + "].constant", 1.0f);
+			ourShader.setFloat("pointLights[" + to_string(i) + "].linear", 0.09);
+			ourShader.setFloat("pointLights[" + to_string(i) + "].quadratic", 0.032);
+		}
 
-		ourShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
-		ourShader.setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
-
-		// Set Attenuation info
-		ourShader.setFloat("light.constant", 1.0f);
-		ourShader.setFloat("light.linear", 0.09f);
-		ourShader.setFloat("light.quadratic", 0.032f);
+		// spotLight
+		ourShader.setVec3("spotLight.position", sceneCamera->GetCameraPos());
+		ourShader.setVec3("spotLight.direction", sceneCamera->GetCameraFront());
+		ourShader.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+		ourShader.setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
+		ourShader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
+		ourShader.setFloat("spotLight.constant", 1.0f);
+		ourShader.setFloat("spotLight.linear", 0.09);
+		ourShader.setFloat("spotLight.quadratic", 0.032);
+		ourShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+		ourShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
 
 		// 프레임 계산
 		currentFrame = (float)glfwGetTime();
@@ -746,15 +736,19 @@ int main()
 		// 이 오브젝트로 나중에 라이트 구성하는 듯
 		lightShader.use();
 
-		trans = mat4(1.0f);
-		trans = translate(trans, lightPos);
-		trans = scale(trans, vec3(0.2f));
-
 		lightShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
-		lightShader.setMat4("world", trans);
 		lightShader.setMat4("view", viewMatrix);
 		lightShader.setMat4("projection", projectionMatrix);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		for (unsigned int i = 0; i < 4; i++)
+		{
+			trans = mat4(1.0f);
+			trans = translate(trans, pointLightPositions[i]);
+			trans = scale(trans, vec3(0.2f));
+
+			lightShader.setMat4("world", trans);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
 
 		/*
 		// 오브젝트를 그린다

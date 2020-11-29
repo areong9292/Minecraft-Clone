@@ -36,6 +36,9 @@ ShaderManager::ShaderManager(ShaderType type)
 	case ShaderManager::SPOTLIGHT:
 		LoadShader("../Shader/SpotlightShader.vs", "../Shader/SpotlightShader.fs");
 		break;
+	case ShaderManager::MULTIPLELIGHTS:
+		LoadShader("../Shader/MultipleLightsShader.vs", "../Shader/MultipleLightsShader.fs");
+		break;
 	default:
 		break;
 	}
