@@ -2,3 +2,5 @@
 Make Minecraft with OpenGL
 
 Make Game Engine!
+
+assimp
