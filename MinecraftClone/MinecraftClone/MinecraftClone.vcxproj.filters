@@ -42,6 +42,12 @@
     <ClCompile Include="..\Includes\Component\Transform.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="..\Includes\Component\Mesh.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Includes\Component\Model.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ShaderManager.h">
@@ -60,6 +66,15 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Includes\Component\Transform.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Includes\Component\Mesh.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Includes\GLMHeader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Includes\Component\Model.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>

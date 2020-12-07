@@ -108,7 +108,9 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glfw3.lib;opengl32.lib;assimp-vc141-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -148,6 +150,8 @@
   <ItemGroup>
     <ClCompile Include="..\Includes\Component\Component.cpp" />
     <ClCompile Include="..\Includes\Component\GameObject.cpp" />
+    <ClCompile Include="..\Includes\Component\Mesh.cpp" />
+    <ClCompile Include="..\Includes\Component\Model.cpp" />
     <ClCompile Include="..\Includes\Component\Transform.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="glad.c" />
@@ -157,8 +161,11 @@
   <ItemGroup>
     <ClInclude Include="..\Includes\Component\Component.h" />
     <ClInclude Include="..\Includes\Component\GameObject.h" />
+    <ClInclude Include="..\Includes\Component\Mesh.h" />
+    <ClInclude Include="..\Includes\Component\Model.h" />
     <ClInclude Include="..\Includes\Component\Singleton.h" />
     <ClInclude Include="..\Includes\Component\Transform.h" />
+    <ClInclude Include="..\Includes\GLMHeader.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ShaderManager.h" />
   </ItemGroup>

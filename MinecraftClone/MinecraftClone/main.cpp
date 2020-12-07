@@ -17,15 +17,15 @@
 // Image Loader Library
 // 관련 정의 소스 코드 만 포함하도록 헤더 파일을 수정하여
 // 효과적으로 헤더 파일을 .cpp 파일로 변환합니다.
-#define STB_IMAGE_IMPLEMENTATION
+//#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
+
+#include "../Includes/Component/Model.h"
 
 using namespace std;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 // 버텍스, 인덱스 생성
 // OpenGL은 정규화 된 좌표를 처리한다
@@ -602,6 +602,10 @@ int main()
 	vec3 lightPos(1.2f, 0.0f, 2.0f);
 	vec3 lightColor(0.1f, 0.1f, 0.1f);
 
+	char modelpath[255] = "../Models/spider/Spider_3.fbx";
+	//char modelpath[255] = "../Models/wolf/Wolf.fbx";
+	Model ourModel(modelpath, verticesOffset, &ourShader);
+
 	// Render loop
 	// 윈도우 종료 때까지 계속 반복하면서 렌더링한다
 	while (!glfwWindowShouldClose(window))
@@ -729,8 +733,9 @@ int main()
 
 			// 큐브 그리기
 			// glDrawArrays - 버텍스만 있으면 그 버텍스들 순서대로 연결한다
-			glDrawArrays(GL_TRIANGLES, 0, 36);
+			//glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
+		ourModel.UpdateComponent();
 
 		// light object 그리기
 		// 이 오브젝트로 나중에 라이트 구성하는 듯
@@ -881,43 +886,4 @@ void processInput(GLFWwindow* window)
 			sceneCamera->SetCameraTopBottomMove(false);
 		}
 	}
-}
-
-// utility function for loading a 2D texture from file
-// ---------------------------------------------------
-unsigned int loadTexture(char const * path)
-{
-	unsigned int textureID;
-	glGenTextures(1, &textureID);
-
-	int width, height, nrComponents;
-	unsigned char *data = stbi_load(path, &width, &height, &nrComponents, 0);
-	if (data)
-	{
-		GLenum format;
-		if (nrComponents == 1)
-			format = GL_RED;
-		else if (nrComponents == 3)
-			format = GL_RGB;
-		else if (nrComponents == 4)
-			format = GL_RGBA;
-
-		glBindTexture(GL_TEXTURE_2D, textureID);
-		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		stbi_image_free(data);
-	}
-	else
-	{
-		std::cout << "Texture failed to load at path: " << path << std::endl;
-		stbi_image_free(data);
-	}
-
-	return textureID;
 }
