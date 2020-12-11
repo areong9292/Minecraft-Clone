@@ -3,4 +3,4 @@ Make Minecraft with OpenGL
 
 Make Game Engine!
 
-assimp testing...
+Make a schedule and run it with Trello
