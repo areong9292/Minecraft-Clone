@@ -5,16 +5,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-
 #include <GLMHeader.h>
 #include <vector>
 #include "Component.h"
-
-// Image Loader Library
-// 관련 정의 소스 코드 만 포함하도록 헤더 파일을 수정하여
-// 효과적으로 헤더 파일을 .cpp 파일로 변환합니다.
-//#define STB_IMAGE_IMPLEMENTATION
-//#include <stb_image.h>
 
 #include "../../MinecraftClone/ShaderManager.h"
 

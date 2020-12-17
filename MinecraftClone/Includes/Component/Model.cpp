@@ -181,6 +181,11 @@ vector<Texture> Model::loadMaterialTextures(aiMaterial * mat, aiTextureType type
 unsigned int Model::TextureFromFile(const char * path, const string & directory, bool gamma)
 {
 	string filename = string(path);
+
+	// 경로 수정
+	filename = ReplaceAll(filename, string("\\"), std::string("/"));
+	filename = ReplaceAll(filename, string("../"), std::string(""));
+
 	filename = directory + '/' + filename;
 
 	unsigned int textureID;
